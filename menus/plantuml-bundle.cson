@@ -1,0 +1,77 @@
+'context-menu':
+  'atom-text-editor, .tree-view .file .name[data-name$=\\.puml]': [
+    {
+      'label': 'PlantUML'
+      'submenu': [
+          {
+              'label': 'Preview'
+              'command': 'plantuml-bundle:togglePreview'
+          }
+      ]
+    }
+  ]
+  '.tree-view .directory .header.list-item, .tree-view .file .name[data-name$=\\.puml]': [
+    {
+      'label': 'PlantUML'
+      'submenu': [
+        {
+          'label': 'Generate PNG'
+          'command': 'plantuml-bundle:togglePreview'
+        }
+        {
+        'label': 'Generate SVG'
+        'command': 'plantuml-bundle:togglePreview'
+        }
+      ]
+    }
+  ]
+  '.plantuml-bundle': [
+    {
+      'label': 'Toggle Zoom To Fit'
+      'command': 'plantuml-bundle:preview-zoom-fit'
+    }
+    {
+      'label': 'Zoom In'
+      'command': 'plantuml-bundle:preview-zoom-in'
+    }
+    {
+      'label': 'Zoom Out'
+      'command': 'plantuml-bundle:preview-zoom-out'
+    }
+    {
+      'label': 'Reset Zoom'
+      'command': 'plantuml-bundle:reset-zoom'
+    }
+  ]
+  '.plantuml-bundle .uml-image': [
+    {
+      'label': 'Copy Diagram'
+      'command': 'plantuml-bundle:copy-image'
+    }
+  ]
+  '.plantuml-bundle .copy-filename': [
+    {
+      'label': 'Copy Filename'
+      'command': 'plantuml-bundle:copy-filename'
+    }
+  ]
+  '.plantuml-bundle .open-file': [
+    {
+      'label': 'Open Diagram'
+      'command': 'plantuml-bundle:open-file'
+    }
+  ]
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'PlantUML'
+      'submenu': [
+        {
+          'label': 'Preview'
+          'command': 'plantuml-bundle:togglePreview'
+        }
+      ]
+    ]
+  }
+]

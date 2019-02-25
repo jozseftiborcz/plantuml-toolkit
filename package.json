@@ -1,6 +1,6 @@
 {
-  "name": "plantuml-preview",
-  "main": "./lib/plantuml-preview",
+  "name": "plantuml-bundle",
+  "main": "./lib/plantuml-bundle",
   "version": "0.12.9",
   "description": "Package for using PlantUML to create rendered uml diagrams and display. Toggle with shortcut. Updates on save. Handles multipage sequence diagrams. Feature rich, configuration heavy.",
   "keywords": [
@@ -9,9 +9,9 @@
     "preview"
   ],
   "activationCommands": {
-    "atom-workspace": "plantuml-preview:toggle"
+    "atom-workspace": "plantuml-bundle:togglePreview"
   },
-  "repository": "https://github.com/peele/plantuml-preview",
+  "repository": "https://github.com/peele/plantuml-bundle",
   "license": "MIT",
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
