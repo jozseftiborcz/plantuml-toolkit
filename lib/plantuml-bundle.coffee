@@ -59,11 +59,6 @@ module.exports =
       description: 'Arguments are added immediately after -jar. Arguments specified in settings may override.'
       type: 'string'
       default: ''
-    jarLocation:
-      title: 'PlantUML Jar'
-      description: 'Path to and including PlantUML Jar.'
-      type: 'string'
-      default: 'plantuml.jar'
     dotLocation:
       title: 'Graphvis Dot Executable'
       description: "Path to and including Dot executable. If empty string, '-graphvizdot' argument will not be used."
