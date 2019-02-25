@@ -3,10 +3,10 @@ url = require 'url'
 PlantumlPreviewView = null
 
 uriForEditor = (editor) ->
-  "plantuml-preview://editor/#{editor.id}"
+  "plantuml-bundle://editor/#{editor.id}"
 
 isPlantumlPreviewView = (object) ->
-  PlantumlPreviewView ?= require './plantuml-preview-view'
+  PlantumlPreviewView ?= require './plantuml-bundle-view'
   object instanceof PlantumlPreviewView
 
 removePreviewForEditor = (editor) ->
@@ -83,7 +83,7 @@ module.exports =
       default: false
     useTempDir:
       title: 'Use Temp Directory'
-      description: 'Output diagrams to {OS Temp Dir}/plantuml-preview/'
+      description: 'Output diagrams to {OS Temp Dir}/plantuml-bundle/'
       type: 'boolean'
       default: true
     outputFormat:
@@ -97,12 +97,12 @@ module.exports =
       default: true
 
   activate: ->
-    atom.commands.add 'atom-workspace', 'plantuml-preview:toggle', -> toggle()
+    atom.commands.add 'atom-workspace', 'plantuml-bundle:togglePreview', -> toggle()
     @openerDisposable = atom.workspace.addOpener (uriToOpen) ->
       {protocol, host, pathname} = url.parse uriToOpen
-      return unless protocol is 'plantuml-preview:'
+      return unless protocol is 'plantuml-bundle:'
 
-      PlantumlPreviewView ?= require './plantuml-preview-view'
+      PlantumlPreviewView ?= require './plantuml-bundle-view'
       new PlantumlPreviewView(editorId: pathname.substring(1))
 
   deactivate: ->
