@@ -19,10 +19,7 @@
       "plantuml-bundle:generateTXT"
     ]
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/MatheusAze/plantuml-bundle.git"
-  },
+  "repository": "https://github.com/MatheusAze/plantuml-bundle",
   "bugs": {
     "url": "https://github.com/MatheusAze/plantuml-bundle/issues"
   },
