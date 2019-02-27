@@ -76,10 +76,15 @@ generate = (imageType) ->
             return
 
         dirRequest = null
+        sourceRequest = null
+        isDir = false
         if stats.isDirectory()
             dirRequest = selectedItemPath
+            sourceRequest = dirRequest + '/**.puml'
+            isDir = true
         else if stats.isFile()
             dirRequest = selectedItemPath.substr(0, selectedItemPath.lastIndexOf(path.sep))
+            sourceRequest = selectedItemPath
 
         destinationDir = dirRequest + '/images'
 
@@ -98,7 +103,7 @@ generate = (imageType) ->
         args.push '-t' + imageType
         if dotLocation != ''
           args.push '-graphvizdot', dotLocation
-        args.push '-output', destinationDir, dirRequest + '/**.puml'
+        args.push '-output', destinationDir, sourceRequest
 
         outputlog = []
         errorlog = []
@@ -129,11 +134,20 @@ generate = (imageType) ->
           #exitHandler imgFiles
           console.log code
           if code == 100
-              atom.notifications.addWarning "plantuml-bundle: No diagrams", detail: "No diagrams found in folder #{dirRequest}", dismissable: true
+              if isDir
+                  atom.notifications.addWarning "plantuml-bundle: No diagrams", detail: "No diagrams found in folder #{dirRequest}", dismissable: true
+              else
+                  atom.notifications.addWarning "plantuml-bundle: Not a diagram", detail: "#{selectedItemPath} is not a supported diagram", dismissable: true
           else if code == 200
-              notifyError 'Syntax error', "There are syntax error(s) in one or more diagrams in folder #{dirRequest}"
+              if isDir
+                  notifyError 'Syntax error', "There are syntax errors in one or more diagrams: #{dirRequest}"
+              else
+                  notifyError 'Syntax error', "There are syntax errors in #{selectedItemPath}"
           else if code == 0
-              atom.notifications.addSuccess "plantuml-bundle: Success", detail: "The diagrams were successfully generated", dismissable: true
+              if isDir
+                  atom.notifications.addSuccess "plantuml-bundle: Success", detail: "The diagrams were successfully generated", dismissable: true
+              else
+                  atom.notifications.addSuccess "plantuml-bundle: Success", detail: "The diagram was successfully generated", dismissable: true
           else
               notifyError 'Unexpected error', "An unexpected error occurred."
         stdout = (output) ->
@@ -148,8 +162,6 @@ generate = (imageType) ->
         new BufferedProcess({command, args, stdout, stderr, exit}).onWillThrowError errorHandler
 
     );
-
-
 
 module.exports =
   config:

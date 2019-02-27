@@ -10,7 +10,7 @@
       ]
     }
   ]
-  '.tree-view .directory .header.list-item': [
+  '.tree-view .directory': [
     {
       'label': 'PlantUML'
       'submenu': [
