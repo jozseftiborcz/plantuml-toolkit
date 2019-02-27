@@ -12,7 +12,12 @@
     "preview"
   ],
   "activationCommands": {
-    "atom-workspace": "plantuml-bundle:togglePreview"
+    "atom-workspace": [
+        "plantuml-bundle:togglePreview",
+        "plantuml-bundle:generatePNG",
+        "plantuml-bundle:generateSVG",
+        "plantuml-bundle:generateTXT"
+    ]
   },
   "repository": "https://github.com/MatheusAze/plantuml-bundle",
   "license": "MIT",

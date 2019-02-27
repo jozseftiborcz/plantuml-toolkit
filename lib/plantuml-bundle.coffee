@@ -1,6 +1,17 @@
+{$} = require 'atom-space-pen-views'
+{BufferedProcess} = require 'atom'
 fs = null
+path = null
 url = require 'url'
+beautify_html = null
+os = null
 PlantumlPreviewView = null
+DEFAULT_ENCODING = 'UTF-8'
+selectedFilePath = null
+settingError = false
+command = null
+jarLocation = null
+dotLocation = null
 
 uriForEditor = (editor) ->
   "plantuml-bundle://editor/#{editor.id}"
@@ -42,6 +53,104 @@ toggle = ->
 
   addPreviewForEditor(editor) unless removePreviewForEditor(editor)
 
+
+notifyError = (title, message) ->
+  options = {
+    detail: message,
+    dismissable: true
+  }
+  atom.notifications.addError "plantuml-bundle: #{title}", options
+
+generate = (imageType) ->
+    if settingError
+        notifyError "There's an error with your settings. Please, fix them before continuing"
+        return
+
+    fs ?= require 'fs-plus'
+    path ?= require 'path'
+
+    selectedItemPath = $('.tree-view .selected span').data('path')
+    fs.lstat(selectedItemPath, (err, stats) ->
+        if(err)
+            notifyError('Unexpected error', err)
+            return
+
+        dirRequest = null
+        if stats.isDirectory()
+            dirRequest = selectedItemPath
+        else if stats.isFile()
+            dirRequest = selectedItemPath.substr(0, selectedItemPath.lastIndexOf(path.sep))
+
+        destinationDir = dirRequest + '/images'
+
+        args = ['-Djava.awt.headless=true', '-Xmx1024m', '-DPLANTUML_LIMIT_SIZE=16800']
+        javaAdditional = atom.config.get('plantuml-bundle.javaAdditional')
+        if javaAdditional != ''
+          args.push javaAdditional
+
+        args.push '-jar', jarLocation
+
+        jarAdditional = atom.config.get('plantuml-bundle.jarAdditional')
+        if jarAdditional != ''
+          args.push jarAdditional
+        args.push '-failfast2'
+        args.push '-charset', DEFAULT_ENCODING
+        args.push '-t' + imageType
+        if dotLocation != ''
+          args.push '-graphvizdot', dotLocation
+        args.push '-output', destinationDir, dirRequest + '/**.puml'
+
+        outputlog = []
+        errorlog = []
+
+        exitHandler = (files) =>
+          for file in files
+            if fs.isFileSync file
+              if atom.config.get('plantuml-bundle.beautifyXml') and (format == 'svg')
+                beautify_html ?= require('js-beautify').html
+                buffer = fs.readFileSync(file, DEFAULT_ENCODING)
+                buffer = beautify_html buffer
+                fs.writeFileSync(file, buffer, {encoding: DEFAULT_ENCODING})
+            else
+              console.log("File not found: #{file}")
+
+          if errorlog.length > 0
+            str = errorlog.join('')
+            if str.match ///jarfile///i
+              notifyError 'PlantUML Jar', str + " [#{jarLocation}]"
+            else
+              console.log "plantuml-bundle: stderr\n#{str}"
+          if outputlog.length > 0
+            str = outputlog.join('')
+            atom.notifications.addInfo "plantuml-bundle: stdout (logged to console)", detail: str, dismissable: true
+            console.log "plantuml-bundle: stdout\n#{str}"
+
+        exit = (code) ->
+          #exitHandler imgFiles
+          console.log code
+          if code == 100
+              atom.notifications.addWarning "plantuml-bundle: No diagrams", detail: "No diagrams found in folder #{dirRequest}", dismissable: true
+          else if code == 200
+              notifyError 'Syntax error', "There are syntax error(s) in one or more diagrams in folder #{dirRequest}"
+          else if code == 0
+              atom.notifications.addSuccess "plantuml-bundle: Success", detail: "The diagrams were successfully generated", dismissable: true
+          else
+              notifyError 'Unexpected error', "An unexpected error occurred."
+        stdout = (output) ->
+          outputlog.push output
+        stderr = (output) ->
+          errorlog.push output
+        errorHandler = (object) ->
+          object.handle()
+          notifyError 'Java Executable', "#{command} not found."
+
+        console.log("#{command} #{args.join ' '}")
+        new BufferedProcess({command, args, stdout, stderr, exit}).onWillThrowError errorHandler
+
+    );
+
+
+
 module.exports =
   config:
     java:
@@ -52,6 +161,11 @@ module.exports =
     javaAdditional:
       title: 'Additional Java Arguments'
       description: 'Such as -DPLANTUML_LIMIT_SIZE=8192 or -Xmx1024m. -Djava.awt.headless=true arguement is included by default.'
+      type: 'string'
+      default: ''
+    jarPlantuml:
+      title: 'PlantUML Jar Path'
+      description: 'Path to PlantUML\'s Jar. Should be set only if automatic configuration fails.'
       type: 'string'
       default: ''
     jarAdditional:
@@ -91,8 +205,40 @@ module.exports =
       type: 'boolean'
       default: true
 
+  initialize: (serializeState) ->
+    atom.commands.add 'atom-workspace',
+        'plantuml-bundle:togglePreview': -> toggle()
+        'plantuml-bundle:generatePNG': -> generate 'png'
+        'plantuml-bundle:generateSVG': -> generate 'svg'
+        'plantuml-bundle:generateTXT': -> generate 'utxt'
+
+    os ?= require 'os'
+    fs ?= require 'fs-plus'
+    path ?= require 'path'
+
+    command = atom.config.get 'plantuml-bundle.java'
+    if (command != 'java') and (!fs.isFileSync command)
+      notifyError 'Java Executable', "#{command} is not a file."
+      settingError = true
+
+    jarLocation = path.join(__dirname, '../vendor', 'plantuml.jar')
+
+    if !fs.isFileSync jarLocation
+      jarPathInConfig = atom.config.get('plantuml-bundle.jarPlantuml')
+      if !fs.isFileSync jarPathInConfig
+        settingsError 'PlantUML Jar', "Could not locate PlantUML's JAR [path=#{jarPathInConfig}]. Please set 'PlantUML Jar Path' in configuration"
+        settingError = true
+      else
+        jarLocation = jarPathInConfig
+
+    dotLocation = atom.config.get('plantuml-bundle.dotLocation')
+    if dotLocation != ''
+      if !fs.isFileSync dotLocation
+        settingsError 'Graphvis Dot Executable', "#{dotLocation} is not a file."
+        settingError = true
+
+
   activate: ->
-    atom.commands.add 'atom-workspace', 'plantuml-bundle:togglePreview', -> toggle()
     @openerDisposable = atom.workspace.addOpener (uriToOpen) ->
       {protocol, host, pathname} = url.parse uriToOpen
       return unless protocol is 'plantuml-bundle:'

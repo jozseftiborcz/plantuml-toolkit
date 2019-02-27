@@ -1,5 +1,5 @@
 'context-menu':
-  'atom-text-editor, .tree-view .file .name[data-name$=\\.puml]': [
+  'atom-text-editor': [
     {
       'label': 'PlantUML'
       'submenu': [
@@ -10,17 +10,21 @@
       ]
     }
   ]
-  '.tree-view .directory .header.list-item, .tree-view .file .name[data-name$=\\.puml]': [
+  '.tree-view .directory .header.list-item': [
     {
       'label': 'PlantUML'
       'submenu': [
         {
           'label': 'Generate PNG'
-          'command': 'plantuml-bundle:togglePreview'
+          'command': 'plantuml-bundle:generatePNG'
         }
         {
         'label': 'Generate SVG'
-        'command': 'plantuml-bundle:togglePreview'
+        'command': 'plantuml-bundle:generateSVG'
+        }
+        {
+        'label': 'Generate TXT'
+        'command': 'plantuml-bundle:generateTXT'
         }
       ]
     }

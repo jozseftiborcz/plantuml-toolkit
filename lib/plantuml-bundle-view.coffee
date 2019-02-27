@@ -281,10 +281,17 @@ class PlantumlPreviewView extends ScrollView
     if (command != 'java') and (!fs.isFileSync command)
       settingsError "#{command} is not a file.", 'Java Executable', command
       settingError = true
-    jarLocation = path.join(__dirname, '../vendor', 'plantuml.jar') 
+
+    jarLocation = path.join(__dirname, '../vendor', 'plantuml.jar')
+
     if !fs.isFileSync jarLocation
-      settingsError "#{jarLocation} is not a file. Check your network settings and reinstall the package", 'PlantUML Jar', jarLocation
-      settingError = true
+      jarPathInConfig = atom.config.get('plantuml-bundle.jarPlantuml')
+      if !fs.isFileSync jarPathInConfig
+        settingsError "Could not locate PlantUML's JAR. Please set 'PlantUML Jar Path' in configuration", 'PlantUML Jar', jarLocation
+        settingError = true
+      else
+        jarLocation = jarPathInConfig
+
     dotLocation = atom.config.get('plantuml-bundle.dotLocation')
     if dotLocation != ''
       if !fs.isFileSync dotLocation
@@ -296,11 +303,13 @@ class PlantumlPreviewView extends ScrollView
       @container.show
       return
 
-    args = ['-Djava.awt.headless=true']
+    args = ['-Djava.awt.headless=true', '-Xmx1024m', '-DPLANTUML_LIMIT_SIZE=16800']
     javaAdditional = atom.config.get('plantuml-bundle.javaAdditional')
     if javaAdditional != ''
       args.push javaAdditional
+
     args.push '-jar', jarLocation
+
     jarAdditional = atom.config.get('plantuml-bundle.jarAdditional')
     if jarAdditional != ''
       args.push jarAdditional
