@@ -1,0 +1,485 @@
+'.source.plantuml':
+  'Start Sequence Diagram':
+    'prefix':'starts'
+    'body': """
+      @startuml
+      'Import Sequence diagram style
+      !include ../../atom_files/styles/sequence.puml
+
+      'diagram title'
+      title ${1:TITLE}
+
+      'a brief description of the diagram'
+      legend top
+      -- \\\\t**Abstract:**\\\\t --
+      ${2:DIAGRAM_DESCRIPTION}
+      end legend
+
+      'a list of the actors - type actor|participant|database|queue to get template'
+      actor "${3:TITLE}" as ${4:ALIAS}
+
+      @enduml
+    """
+
+  'Start Use Case Diagram':
+    'prefix': 'startu'
+    'body' : """
+      @startuml
+      'Import Use Case diagram style
+      !include ../../atom_files/styles/usecase.puml
+
+      'Key'
+      legend bottom left
+      -- **Key** --
+      <color green>**GREEN**</color> = Next API exists, no change required
+      <color yellow>**YELLOW**</color> = Next API exists, change required
+      <color red>**RED**</color> = Next API does not exist, new API required
+      <color grey>**GREY**</color> = Delivered as part of different PB
+      end legend
+
+      'diagram title'
+      title ${1:TITLE}
+
+      'a brief description of the diagram'
+      legend top
+      -- \\\\t**Abstract:**\\\\t --
+      ${2:DIAGRAM_DESCRIPTION}
+      end legend
+
+      'a list of the actors - type actor|participant|database|queue to get template'
+      $3
+
+      'a list of the usecases - type usecase to get template'
+      $4
+
+
+      @enduml
+    """
+
+  'Start Activity Diagram':
+    'prefix': 'starta'
+    'body': """
+      @startuml
+      'Import Activity diagram style
+      !include ../../atom_files/styles/activity.puml
+
+      'diagram title'
+      title ${1:TITLE}
+
+      'a brief description of the diagram'
+      legend top
+      -- \\\\t**Abstract:**\\\\t --
+      ${2:DIAGRAM_DESCRIPTION}
+      end legend
+
+      $3
+
+      @enduml
+    """
+
+  'Start Entity Relationship Diagram (ERD)':
+    'prefix': 'starte'
+    'body': """
+      @startuml
+      'Import ERD style
+      !include ../../atom_files/styles/erd.puml
+
+      'Key'
+      note as key #white
+      -- <size: 20><b>KEY</b></size> --
+
+      Primary Key = primary_key(BOLD)
+
+      Foreign Key = foreign_key(ITALICS)
+
+      Not Null = not_null(UNDERSCORED)
+
+      Unique = unique(GREEN)
+
+      New/Changed = new_column(BLUE)
+
+      end note
+
+      'diagram title'
+      title ${1:TITLE}
+
+      'a brief description of the diagram'
+      legend top
+      -- \\\\t**Abstract:**\\\\t --
+      ${2:DIAGRAM_DESCRIPTION}
+      end legend
+
+      'entities'
+      table(${3:TABLE_ALIAS}, "${3:TABLE_NAME}") {
+      'table primary key'
+      primary_key(${3:TABLE_PRIMARY_KEY}_UID)
+      --
+      'table columns'
+      {field} ${4:TABLE_COLUMN}
+
+      }
+
+      'entity relationships'
+
+
+
+      @enduml
+    """
+
+
+
+  'Package':
+    'prefix': 'pack'
+    'body': """
+    package ${1:name} <<${2:Folder|Cloud|Rect|Database|Frame>>}
+    """
+
+
+
+
+  'Start Class Diagram':
+    'prefix': 'startz'
+    'body': """
+      @startuml
+      'Import Class diagram style
+      !include ../../atom_files/styles/class.puml
+
+      ' package and class defs
+      package BigPackage <<Folder>> {
+        class ArrayList
+        abstract class List
+
+        ArrayList .up.|> List
+        class Class13
+        class Class17
+        class Class18
+        class Class19
+        class Class20
+
+        enum TimeUnit {
+        DAYS
+        HOURS
+        MINUTES
+        }
+        annotation SuppressWarnings
+      }
+
+      package java.lang <<Rect>> {
+        interface Runnable {
+          run():void
+        }
+      }
+      package Package02 <<Cloud>> {
+        class Class01 {
+          {static}  -value1:string
+          ..
+          {abstract} #value2:string
+          ==
+          +value3:string
+          --
+          m(a: string):void
+        }
+        class Class02
+      }
+
+      class Class15 <? extends Element > {
+
+      }
+      package FPackage <<Frame>> {
+        class Class05
+        class Class06
+        class Class08
+      }
+      package Package11 <<Database>> {
+        class Class10
+        class Class04
+
+        Class05 o-- Class06
+        Class05 .. Class08
+        Class05 -- Class10
+        Class04 *-- Class05
+
+      }
+
+
+      note "This is a floating note" as N1
+      Class01 -- N1
+      ' relationship
+      Class01 <|-- Class02
+      Class13 --> Class20 : uses >
+      Class15 .> Class20 : label
+      Class17 ..|> Class20
+      Class19 <--* Class20
+
+
+      @enduml
+
+    """
+
+  'Start Component Diagram':
+    'prefix': 'startc'
+    'body' : """
+      @startuml
+      'Import Component diagram style
+      !include ../../atom_files/styles/component.puml
+
+      title The Title
+      skinparam componentStyle uml2
+      package "Some Group" {
+        interface HTTP as httpEndpoint
+        [First Component]
+        [Another Component]
+      }
+      node "Other Groups" {
+        FTP - [Second Component]
+      }
+      cloud {
+        [Example 1]
+      }
+      database "MySql" {
+        folder "This is my folder" {
+          [Folder 3]
+        }
+        frame "Foo" {
+          [Frame 4]
+        }
+      }
+      httpEndpoint - [First Component]
+      [First Component] --> FTP
+      [Another Component] --> [Example 1]
+      [Example 1] --> [Folder 3]
+      @enduml
+    """
+  'Autonumber (Sequence diagrams)':
+    'prefix': 'auto'
+    'body': 'autonumber'
+  'Autonumber Stop (Sequence Diagram)':
+    'prefix': 'autos'
+    'body' : 'autonumber stop'
+
+  'Activate (Sequence Diagram)':
+    'prefix': 'activ'
+    'body': 'activate ${1:node}'
+  'Deactivate (Sequence Diagram)':
+    'prefix': 'deact'
+    'body': 'deactivate ${1:node}'
+
+  'Start State Diagram':
+    'prefix': 'startt'
+    'body': """
+      @startuml
+      'Import State diagram style
+      !include ../../atom_files/styles/sate.puml
+
+      'diagram title'
+      title ${1:title}
+
+      'a brief description of the diagram'
+      legend top
+      -- \\\\t**Abstract:**\\\\t --
+      ${2:DIAGRAM_DESCRIPTION}
+      end legend
+
+      'states'
+
+
+
+      @enduml
+    """
+
+  'Start Uml':
+    'prefix': 'start'
+    'body': """
+    @startuml
+    $1
+
+
+
+    @enduml
+    """
+  'New Page (Use Case Diagram)':
+    'prefix':'new'
+    'body': 'newpage'
+  'Frame':
+    'prefix': 'frame'
+    'body' : """
+    frame ${1:title} {
+      $2
+    }
+    """
+  'Folder':
+    'prefix': 'folder'
+    'body' : """
+    folder ${1:title} {
+      $3
+    }
+    """
+  'NODE':
+    'prefix': 'node'
+    'body' : """
+    node "${1:TITLE}" as ${2:ALIAS}
+    """
+  'Actor':
+    'prefix': 'actor'
+    'body' : """
+      actor "${1:TITLE}" as ${2:ALIAS}
+    """
+  'Database':
+    'prefix': 'database'
+    'body' : """
+      database "${1:TITLE}" as ${2:ALIAS}
+    """
+  'Participant':
+    'prefix': 'participant'
+    'body' : """
+      participant "${1:TITLE}" as ${2:ALIAS}
+    """
+
+  'Queue':
+    'prefix': 'queue'
+    'body' : """
+      queue "${1:TITLE}" as ${2:ALIAS}
+    """
+
+  'Usecase':
+    'prefix': 'usecase'
+    'body' : """
+      usecase UC${1: USECASE_NUMBER} #${2:COLOR} as "**UC${1: USECASE_NUMBER}**
+      --
+      ${3:USECASE_NAME}
+      "
+    """
+  'Table':
+    'prefix': 'table'
+    'body': """
+      table(${1:TABLE_ALIAS}, "${1:TABLE_NAME}") {
+      'table primary key'
+      primary_key(${1:TABLE_PRIMARY_KEY}_UID)
+      --
+      'table columns'
+      {field} ${2:TABLE_COLUMN}
+      }
+     """
+
+  'State':
+    'prefix': 'state'
+    'body' : """
+      state "${1:TITLE}" as ${2:ALIAS} : ${3:DESCRIPTION}
+    """
+
+  'Note':
+    'prefix': 'note'
+    'body': """
+    note ${1:PLACEMENT} of ${2:NODE}
+    **Note:**
+    $3
+    end note
+    """
+
+  'Rnote':
+    'prefix': 'rnote'
+    'body': """
+    rnote ${1:PLACEMENT} of ${2:NODE}
+    **Note:**
+    $3
+    end note
+    """
+
+  'Assumption':
+    'prefix': 'assumption'
+    'body': """
+    note ${1:PLACEMENT} of ${2:NODE} #aqua
+    **Assumption:**
+    $3
+    end note
+    """
+
+  'Clarification':
+    'prefix': 'clarification'
+    'body': """
+    note ${1:PLACEMENT} of ${2:NODE} #coral
+    **Clarification:**
+    $3
+    end note
+    """
+
+  'Endpoint':
+    'prefix': 'endpoint'
+    'body': """
+    note ${1:PLACEMENT} of ${2:NODE} #plum
+    **Endpoint:**
+    $3
+
+    **Current implementation:**
+    $4
+
+    **Required implementation:**
+    <i>Either through extension of existing API or new,</i> $5
+
+
+    **ENSURE BACKWARDS COMPATIBILITY IS MAINTAINED**
+    end note
+    """
+
+  'Group':
+    'prefix': 'group'
+    'body': """
+    group ${1:INSERT_TEXT_HERE}
+        $2
+    end group
+    """
+
+  'Box':
+    'prefix': 'box'
+    'body': """
+    box "${1:INSERT_TEXT_HERE}" #${2:color}
+        $3
+    end box
+    """
+
+  'Loop':
+    'prefix': 'loop'
+    'body': """
+    loop #${1:transparent} ${2:INSERT_TEXT_HERE}
+        $3
+    end loop
+    """
+
+  'Alt':
+    'prefix': 'alt'
+    'body': """
+    alt #${1:transparent} ${2:INSERT_TEXT_HERE}
+        $3
+
+    else ${4:INSERT_TEXT_HERE}
+        $5
+
+    end alt
+    """
+
+  'Ref':
+    'prefix': 'ref'
+    'body': """
+    ref over ${1:ACTOR(s)}
+        $2
+    end ref
+    """
+
+  'Else':
+    'prefix': 'else'
+    'body': """
+    else ${1:INSERT_TEXT_HERE}
+        $2
+    """
+
+  'Legend':
+    'prefix': 'legend'
+    'body': """
+    legend ${1:PLACEMENT}
+        $2
+    end legend
+    """
+
+  'Component':
+    'prefix':'comp'
+    'body': 'component "${1:INSERT_TEXT_HERE}" as ${2:ALIAS}'

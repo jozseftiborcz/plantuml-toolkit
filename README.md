@@ -1,5 +1,21 @@
-# PlantUML Preview
-Package for using [PlantUML](http://plantuml.com/index.html) to create rendered uml diagrams and display.
+# PlantUML Bundle
+
+A fork of [plantuml-preview](https://github.com/peele/plantuml-preview/) with syntax highlighting rules from [language-plantuml](https://github.com/plafue/language-plantuml/), automatic configuration of plantuml's jar from [node-plantuml](https://www.npmjs.com/package/node-plantuml) and new functionalities.
+
+## Features
+- Visualization of diagrams (from plantuml-preview)
+- Syntax highlighting for PlantUML (from language-plantuml)
+- Automatic download and configuration of plantuml's jar (from node-plantuml)
+  - Make sure you have access to the following URL: https://sourceforge.net/projects/plantuml/files/
+  - It's still possible to manually define the location of the jar
+- Bulk generation of diagrams
+- Generate all diagrams of a folder
+
+---
+
+## plantuml-preview
+
+plantuml-preview is a package for using [PlantUML](http://plantuml.com/index.html) to create rendered uml diagrams and display.
 
 ![plantuml-preview screenshot](https://raw.githubusercontent.com/peele/plantuml-preview/master/plantuml-preview.png)
 
@@ -47,8 +63,10 @@ Screenshots shown with: [language-plantuml](https://atom.io/packages/language-pl
 - `Use Temp Directory`: Output diagrams to OS temporary directory, default = true
 - `Zoom To Fit`: The initial setting for new preview panes, default = true
 
-## Possible Future Improvements
-- Option to copy SVG diagrams as XML or PNG
-- Improved README
-- FAQ
-- Tests
+---
+
+## PlantUML language package
+
+Basic support for syntax highlighting of PlantUML files in atom.
+
+---

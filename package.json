@@ -20,6 +20,9 @@
     ]
   },
   "repository": "https://github.com/MatheusAze/plantuml-bundle",
+  "bugs": {
+    "url": "https://github.com/MatheusAze/plantuml-bundle/issues"
+  },
   "license": "MIT",
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
@@ -37,5 +40,10 @@
   ],
   "scripts": {
     "postinstall": "node scripts/get-plantuml-jar.js"
+  },
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MatheusAze/plantuml-bundle.git"
   }
 }
