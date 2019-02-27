@@ -1,17 +1,25 @@
 {
   "name": "plantuml-bundle",
   "main": "./lib/plantuml-bundle",
-  "version": "0.12.9",
-  "description": "Package for using PlantUML to create rendered uml diagrams and display. Toggle with shortcut. Updates on save. Handles multipage sequence diagrams. Feature rich, configuration heavy.",
+  "version": "0.0.1",
+  "description": "A bundle with multiple tools to handle PlantUML diagrams. Includes creating and displaying rendered uml diagrams and syntax highlighting.",
   "keywords": [
     "plantuml",
+    "syntax",
+    "highlighting",
+    "diagram",
     "uml",
     "preview"
   ],
   "activationCommands": {
-    "atom-workspace": "plantuml-bundle:togglePreview"
+    "atom-workspace": [
+        "plantuml-bundle:togglePreview",
+        "plantuml-bundle:generatePNG",
+        "plantuml-bundle:generateSVG",
+        "plantuml-bundle:generateTXT"
+    ]
   },
-  "repository": "https://github.com/peele/plantuml-bundle",
+  "repository": "https://github.com/MatheusAze/plantuml-bundle",
   "license": "MIT",
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
@@ -19,6 +27,15 @@
   "dependencies": {
     "atom-space-pen-views": "^2.0.3",
     "fs-plus": "^2.0.0",
-    "js-beautify": "^1.5.10"
+    "js-beautify": "^1.5.10",
+    "node-plantuml": "^0.8.1"
+  },
+  "plantumlVersion": "1.2018.14",
+  "files": [
+    "vendor/plantuml.jar",
+    "scripts/download.js"
+  ],
+  "scripts": {
+    "postinstall": "node scripts/get-plantuml-jar.js"
   }
 }
