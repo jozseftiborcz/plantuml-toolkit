@@ -1,7 +1,7 @@
 {
   "name": "plantuml-bundle",
   "main": "./lib/plantuml-bundle",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "A bundle with multiple tools to handle PlantUML diagrams. Includes creating and displaying rendered uml diagrams and syntax highlighting.",
   "keywords": [
     "plantuml",
