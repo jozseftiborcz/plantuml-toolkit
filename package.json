@@ -11,14 +11,6 @@
     "uml",
     "preview"
   ],
-  "activationCommands": {
-    "atom-workspace": [
-      "plantuml-bundle:togglePreview",
-      "plantuml-bundle:generatePNG",
-      "plantuml-bundle:generateSVG",
-      "plantuml-bundle:generateTXT"
-    ]
-  },
   "repository": "https://github.com/MatheusAze/plantuml-bundle",
   "bugs": {
     "url": "https://github.com/MatheusAze/plantuml-bundle/issues"

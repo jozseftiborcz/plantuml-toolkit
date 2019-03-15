@@ -9,7 +9,7 @@ A fork of [plantuml-preview](https://github.com/peele/plantuml-preview/) with sy
   - Make sure you have access to the following URL: https://sourceforge.net/projects/plantuml/files/
   - It's still possible to manually define the location of the jar
 - Bulk generation of diagrams
-- Generate all diagrams of a folder
+  - Generate all diagrams of a folder
 
 ---
 
