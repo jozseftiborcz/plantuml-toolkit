@@ -132,20 +132,14 @@ module.exports =
       snippetsPath = atom.config.get('plantuml-bundle.languageSettings.snippetsPath')
       if snippetsPath != ''
         fs.isDirectory snippetsPath, (isDirectory) ->
-          if isDirectory
-            snippetsModule = atom.packages.activePackages['snippets'].mainModule
-            snippetsModule.loadSnippetsDirectory snippetsPath, (error, loadedSnippets) ->
-              if error
-                settingsError 'Custom Snippets', "Failed to retrieve custom snippets at [#{snippetsPath}]: #{error}"
-                settingError = true
-              else
-                atom.config.transact =>
-                  for filepath, snippetsBySelector of loadedSnippets
-                    snippetsModule.add(filepath, snippetsBySelector)
-                snippetsModule.doneLoading()
-          else
+          if !isDirectory
             settingsError 'Custom Snippets', "The path [#{snippetsPath}] set in plantuml-bundle configuration is not a valid directory"
             settingError = true
+          else
+            snippetsPackage = atom.packages.getLoadedPackage('snippets')
+
+            snippetsPackage.grammarsPromise.then (response) ->
+              loadCustomSnippets snippetsPackage.mainModule, snippetsPath
 
   activate: ->
       @openerDisposable = atom.workspace.addOpener (uriToOpen) ->
@@ -157,6 +151,21 @@ module.exports =
 
   deactivate: ->
       @openerDisposable.dispose()
+
+loadCustomSnippets = (snippetsModule, customSnippetsPath) ->
+  snippetsModule.loadSnippetsDirectory customSnippetsPath, (error, loadedSnippets) ->
+    if error
+      settingsError 'Custom Snippets', "Failed to retrieve custom snippets at [#{customSnippetsPath}]: #{error}"
+      settingError = true
+    else
+      packageSnippets = snippetsModule.snippetsByPackage.get('plantuml-bundle')
+      selectedPackageFilePath = Object.keys(packageSnippets)[0]
+      atom.config.transact =>
+        for filepath, snippetsBySelector of loadedSnippets
+          snippetsModule.add(filepath, snippetsBySelector)
+          Object.assign(
+            packageSnippets[selectedPackageFilePath]['.source.plantuml'],
+            snippetsBySelector['.source.plantuml'])
 
 settingsError = (title, message) ->
   options = {
@@ -314,4 +323,4 @@ generate = (imageType) ->
     console.log("#{command} #{args.join ' '}")
     new BufferedProcess({command, args, stdout, stderr, exit}).onWillThrowError errorHandler
 
-  );
+  )
