@@ -13,7 +13,7 @@ editorForId = (editorId) ->
 
 settingsError = (message, setting, path) ->
   detail = "Verify '#{setting}' in settings."
-  if path.match ///["']///
+  if path && path.match ///["']///
     detail += "\nSuggestion: Remove single/double quotes from the path string."
   options = {
     detail: detail,
@@ -54,10 +54,10 @@ class PlantumlPreviewView extends ScrollView
 
   attached: ->
     if @editor?
-      @useTempDir.attr('checked', atom.config.get('plantuml-bundle.useTempDir'))
-      @outputFormat.val atom.config.get('plantuml-bundle.outputFormat')
+      @useTempDir.attr('checked', atom.config.get('plantuml-bundle.previewSettings.useTempDir'))
+      @outputFormat.val atom.config.get('plantuml-bundle.previewSettings.outputFormat')
 
-      @zoomToFit.attr('checked', atom.config.get('plantuml-bundle.zoomToFit'))
+      @zoomToFit.attr('checked', atom.config.get('plantuml-bundle.previewSettings.zoomToFit'))
       checkHandler = (checked) =>
         @setZoomFit(checked)
       @on 'change', '#zoomToFit', ->
@@ -70,7 +70,7 @@ class PlantumlPreviewView extends ScrollView
       @outputFormat.change ->
         saveHandler()
 
-      if atom.config.get 'plantuml-bundle.bringFront'
+      if atom.config.get 'plantuml-bundle.previewSettings.bringFront'
         @disposables.add atom.workspace.onDidChangeActivePaneItem (item) =>
           if item is @editor
             pane = atom.workspace.paneForItem(this)
@@ -104,7 +104,7 @@ class PlantumlPreviewView extends ScrollView
             when '.svg'
               try
                 buffer = fs.readFileSync(filename, @editor.getEncoding())
-                if atom.config.get 'plantuml-bundle.beautifyXml'
+                if atom.config.get 'plantuml-bundle.previewSettings.beautifyXml'
                   beautify_html ?= require('js-beautify').html
                   buffer = beautify_html buffer
                 atom.clipboard.write(buffer)
@@ -142,7 +142,7 @@ class PlantumlPreviewView extends ScrollView
 
   addImages: (imgFiles, time) ->
     @container.empty()
-    displayFilenames = atom.config.get('plantuml-bundle.displayFilename')
+    displayFilenames = atom.config.get('plantuml-bundle.previewSettings.displayFilename')
     for file in imgFiles
       if displayFilenames
         div = $('<div/>')
@@ -277,7 +277,7 @@ class PlantumlPreviewView extends ScrollView
       @addImages imgFiles, Date.now()
       return
 
-    command = atom.config.get 'plantuml-bundle.java'
+    command = atom.config.get 'plantuml-bundle.previewSettings.java'
     if (command != 'java') and (!fs.isFileSync command)
       settingsError "#{command} is not a file.", 'Java Executable', command
       settingError = true
@@ -285,14 +285,14 @@ class PlantumlPreviewView extends ScrollView
     jarLocation = path.join(__dirname, '../vendor', 'plantuml.jar')
 
     if !fs.isFileSync jarLocation
-      jarPathInConfig = atom.config.get('plantuml-bundle.jarPlantuml')
+      jarPathInConfig = atom.config.get('plantuml-bundle.previewSettings.jarPlantuml')
       if !fs.isFileSync jarPathInConfig
         settingsError "Could not locate PlantUML's JAR. Please set 'PlantUML Jar Path' in configuration", 'PlantUML Jar', jarLocation
         settingError = true
       else
         jarLocation = jarPathInConfig
 
-    dotLocation = atom.config.get('plantuml-bundle.dotLocation')
+    dotLocation = atom.config.get('plantuml-bundle.previewSettings.dotLocation')
     if dotLocation != ''
       if !fs.isFileSync dotLocation
         settingsError "#{dotLocation} is not a file.", 'Graphvis Dot Executable', dotLocation
@@ -304,13 +304,13 @@ class PlantumlPreviewView extends ScrollView
       return
 
     args = ['-Djava.awt.headless=true', '-Xmx1024m', '-DPLANTUML_LIMIT_SIZE=16800']
-    javaAdditional = atom.config.get('plantuml-bundle.javaAdditional')
+    javaAdditional = atom.config.get('plantuml-bundle.previewSettings.javaAdditional')
     if javaAdditional != ''
       args.push javaAdditional
 
     args.push '-jar', jarLocation
 
-    jarAdditional = atom.config.get('plantuml-bundle.jarAdditional')
+    jarAdditional = atom.config.get('plantuml-bundle.previewSettings.jarAdditional')
     if jarAdditional != ''
       args.push jarAdditional
     args.push '-charset', @editor.getEncoding()
@@ -326,7 +326,7 @@ class PlantumlPreviewView extends ScrollView
     exitHandler = (files) =>
       for file in files
         if fs.isFileSync file
-          if atom.config.get('plantuml-bundle.beautifyXml') and (format == 'svg')
+          if atom.config.get('plantuml-bundle.previewSettings.beautifyXml') and (format == 'svg')
             beautify_html ?= require('js-beautify').html
             buffer = fs.readFileSync(file, @editor.getEncoding())
             buffer = beautify_html buffer
