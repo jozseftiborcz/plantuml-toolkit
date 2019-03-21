@@ -98,6 +98,7 @@ module.exports =
           order: 10
 
   initialize: (serializeState) ->
+      console.log "Initializing plantuml-bundle"
       atom.commands.add 'atom-workspace',
         'plantuml-bundle:togglePreview': -> toggle()
         'plantuml-bundle:generatePNG': -> generate 'png'
@@ -129,6 +130,8 @@ module.exports =
             settingsError 'Graphvis Dot Executable', "#{dotLocation} is not a file."
             settingError = true
 
+  activate: ->
+      console.log "Activating plantuml-bundle"
       snippetsPath = atom.config.get('plantuml-bundle.languageSettings.snippetsPath')
       if snippetsPath != ''
         fs.isDirectory snippetsPath, (isDirectory) ->
@@ -137,11 +140,8 @@ module.exports =
             settingError = true
           else
             snippetsPackage = atom.packages.getLoadedPackage('snippets')
+            loadCustomSnippets snippetsPackage.mainModule, snippetsPath
 
-            snippetsPackage.grammarsPromise.then (response) ->
-              loadCustomSnippets snippetsPackage.mainModule, snippetsPath
-
-  activate: ->
       @openerDisposable = atom.workspace.addOpener (uriToOpen) ->
         {protocol, host, pathname} = url.parse uriToOpen
         return unless protocol is 'plantuml-bundle:'
@@ -158,14 +158,17 @@ loadCustomSnippets = (snippetsModule, customSnippetsPath) ->
       settingsError 'Custom Snippets', "Failed to retrieve custom snippets at [#{customSnippetsPath}]: #{error}"
       settingError = true
     else
-      packageSnippets = snippetsModule.snippetsByPackage.get('plantuml-bundle')
-      selectedPackageFilePath = Object.keys(packageSnippets)[0]
-      atom.config.transact =>
-        for filepath, snippetsBySelector of loadedSnippets
-          snippetsModule.add(filepath, snippetsBySelector)
-          Object.assign(
-            packageSnippets[selectedPackageFilePath]['.source.plantuml'],
-            snippetsBySelector['.source.plantuml'])
+      snippetsModule.onDidLoadSnippets ->
+        packageSnippets = snippetsModule.snippetsByPackage.get('plantuml-bundle')
+        selectedPackageFilePath = Object.keys(packageSnippets)[0]
+        atom.config.transact =>
+          for filepath, snippetsBySelector of loadedSnippets
+            snippetsModule.add(filepath, snippetsBySelector)
+            Object.assign(
+              packageSnippets[selectedPackageFilePath]['.source.plantuml'],
+              snippetsBySelector['.source.plantuml'])
+          # packageSettings = atom.packages.getLoadedPackage('settings-view').mainModule
+          console.log "Custom snippets loaded from #{customSnippetsPath}"
 
 settingsError = (title, message) ->
   options = {
