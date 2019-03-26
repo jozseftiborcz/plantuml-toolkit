@@ -16,7 +16,7 @@ We must be able to understand the purpose of your change from this description. 
 <!--
 
 Please describe the changes in a single line that explains this improvement in
-terms that a user can understand.  This text will be used in plantuml-bundle's release notes.
+terms that a user can understand.  This text will be used in plantuml-toolkit's release notes.
 
 If this change is not user-facing or notable enough to be included in release notes
 you may use the strings "Not applicable" or "N/A" here.

@@ -1,8 +1,8 @@
-# Contributing to plantuml-bundle
+# Contributing to plantuml-toolkit
 
 Thanks for taking the time to contribute!
 
-The following is a set of guidelines for contributing to plantuml-bundle, which is hosted in the [Capco Digital Organization](https://github.com/capcodigital) on GitHub. These are mostly guidelines, not rules. Use your best judgment, and feel free to propose changes to this document in a pull request.
+The following is a set of guidelines for contributing to plantuml-toolkit, which is hosted in the [Capco Digital Organization](https://github.com/capcodigital) on GitHub. These are mostly guidelines, not rules. Use your best judgment, and feel free to propose changes to this document in a pull request.
 
 #### Table Of Contents
 
@@ -22,7 +22,7 @@ This project and everyone participating in it is governed by the [Capco Code of 
 
 ### Reporting Bugs
 
-This section guides you through submitting a bug report for plantuml-bundle. Following these guidelines helps maintainers and the community understand your report, reproduce the behavior, and find related reports.
+This section guides you through submitting a bug report for plantuml-toolkit. Following these guidelines helps maintainers and the community understand your report, reproduce the behavior, and find related reports.
 
 Before creating bug reports, please check [this list](#before-submitting-a-bug-report) as you might find out that you don't need to create one. When you are creating a bug report, please [include as many details as possible](#how-do-i-submit-a-good-bug-report). Fill out [the required template](ISSUE_TEMPLATE.md), the information it asks for helps us resolve issues faster.
 
@@ -30,8 +30,8 @@ Before creating bug reports, please check [this list](#before-submitting-a-bug-r
 
 #### Before Submitting A Bug Report
 
-* **Check the [FAQs](https://github.com/capcodigital/plantuml-bundle/FAQ.md)** for a list of common questions and problems.
-* **Perform a [cursory search](https://github.com/issues?utf8=%E2%9C%93&q=is%3Aissue+user%3Acapcodigital+repo%3Aplantuml-bundle)** to see if the problem has already been reported. If it has **and the issue is still open**, add a comment to the existing issue instead of opening a new one.
+* **Check the [FAQs](https://github.com/capcodigital/plantuml-toolkit/FAQ.md)** for a list of common questions and problems.
+* **Perform a [cursory search](https://github.com/issues?utf8=%E2%9C%93&q=is%3Aissue+user%3Acapcodigital+repo%3Aplantuml-toolkit)** to see if the problem has already been reported. If it has **and the issue is still open**, add a comment to the existing issue instead of opening a new one.
 
 #### How Do I Submit A (Good) Bug Report?
 
@@ -50,7 +50,7 @@ Explain the problem and include additional details to help maintainers reproduce
 
 Provide more context by answering these questions:
 
-* **Did the problem start happening recently** (e.g. after updating to a new version of Atom or plantuml-bundle) or was this always a problem?
+* **Did the problem start happening recently** (e.g. after updating to a new version of Atom or plantuml-toolkit) or was this always a problem?
 * If the problem started happening recently, **can you reproduce the problem in an older version of Atom?** What's the most recent version in which the problem doesn't happen? You can download older versions of Atom from [the releases page](https://github.com/atom/atom/releases).
 * **Can you reliably reproduce the issue?** If not, provide details about how often the problem happens and under which conditions it normally happens.
 * If the problem is related to working with files (e.g. opening and editing files), **does the problem happen for all files and projects or only some?** Does the problem happen only when working with local or remote files (e.g. on network drives), with files of a specific type (e.g. only JavaScript or Python files), with large files or files with very long lines, or with files in a specific encoding? Is there anything else special about the files you are using?
@@ -67,13 +67,13 @@ Include details about your configuration and environment:
 
 ### Suggesting Enhancements
 
-This section guides you through submitting an enhancement suggestion for plantuml-bundle, including completely new features and minor improvements to existing functionality. Following these guidelines helps maintainers and the community understand your suggestion and find related suggestions.
+This section guides you through submitting an enhancement suggestion for plantuml-toolkit, including completely new features and minor improvements to existing functionality. Following these guidelines helps maintainers and the community understand your suggestion and find related suggestions.
 
 Before creating enhancement suggestions, please check [this list](#before-submitting-an-enhancement-suggestion) as you might find out that you don't need to create one. When you are creating an enhancement suggestion, please [include as many details as possible](#how-do-i-submit-a-good-enhancement-suggestion). Fill in [the template](ISSUE_TEMPLATE.md), including the steps that you imagine you would take if the feature you're requesting existed.
 
 #### Before Submitting An Enhancement Suggestion
 
-* **Perform a [cursory search](https://github.com/issues?utf8=%E2%9C%93&q=is%3Aissue+user%3Acapcodigital+repo%3Aplantuml-bundle)** to see if the enhancement has already been suggested. If it has, add a comment to the existing issue instead of opening a new one.
+* **Perform a [cursory search](https://github.com/issues?utf8=%E2%9C%93&q=is%3Aissue+user%3Acapcodigital+repo%3Aplantuml-toolkit)** to see if the enhancement has already been suggested. If it has, add a comment to the existing issue instead of opening a new one.
 
 #### How Do I Submit A (Good) Enhancement Suggestion?
 
@@ -86,21 +86,21 @@ Enhancement suggestions are tracked as [GitHub issues](https://guides.github.com
 * **Include screenshots and animated GIFs** which help you demonstrate the steps or point out the part of Atom which the suggestion is related to. You can use [this tool](https://www.cockos.com/licecap/) to record GIFs on macOS and Windows, and [this tool](https://github.com/colinkeenan/silentcast) or [this tool](https://github.com/GNOME/byzanz) on Linux.
 * **Explain why this enhancement would be useful** .
 * **List some other text editors or applications where this enhancement exists.**
-* **Specify which version of Atom and plantuml-bundle you're using.** You can get the exact Atom's version by running `atom -v` in your terminal, or by starting Atom and running the `Application: About` command from the [Command Palette](https://github.com/atom/command-palette). The plantuml-bundle's version is at the package's settings view.
+* **Specify which version of Atom and plantuml-toolkit you're using.** You can get the exact Atom's version by running `atom -v` in your terminal, or by starting Atom and running the `Application: About` command from the [Command Palette](https://github.com/atom/command-palette). The plantuml-toolkit's version is at the package's settings view.
 * **Specify the name and version of the OS you're using.**
 
 ### Your First Code Contribution
 
-Unsure where to begin contributing to plantuml-bundle? You can start by reading about using Atom or developing packages in Atom, the [Atom Flight Manual](https://flight-manual.atom.io) is free and available online.
+Unsure where to begin contributing to plantuml-toolkit? You can start by reading about using Atom or developing packages in Atom, the [Atom Flight Manual](https://flight-manual.atom.io) is free and available online.
 
 ### Pull Requests
 
 The process described here has several goals:
 
-- Maintain plantuml-bundle's quality
+- Maintain plantuml-toolkit's quality
 - Fix problems that are important to users
-- Engage the community in working toward the best possible bundle
-- Enable a sustainable system for plantuml-bundle's maintainers to review contributions
+- Engage the community in working toward the best possible toolkit
+- Enable a sustainable system for plantuml-toolkit's maintainers to review contributions
 
 Please follow these steps to have your contribution considered by the maintainers:
 

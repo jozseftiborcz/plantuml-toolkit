@@ -1,4 +1,4 @@
-PlantumlPreviewView = require '../lib/plantuml-bundle-view'
+PlantumlPreviewView = require '../lib/plantuml-toolkit-view'
 
 describe "PlantumlPreviewView", ->
   it "has one valid test", ->

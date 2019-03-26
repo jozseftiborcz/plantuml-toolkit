@@ -19,16 +19,16 @@ settingsError = (message, setting, path) ->
     detail: detail,
     buttons: [{
         text: 'Open Package Settings',
-        onDidClick: -> atom.workspace.open('atom://config/packages/plantuml-bundle', searchAllPanes: true)
+        onDidClick: -> atom.workspace.open('atom://config/packages/plantuml-toolkit', searchAllPanes: true)
     }],
     dismissable: true
   }
-  atom.notifications.addError "plantuml-bundle: #{message}", options
+  atom.notifications.addError "plantuml-toolkit: #{message}", options
 
 module.exports =
 class PlantumlPreviewView extends ScrollView
   @content: ->
-    @div class: 'plantuml-bundle padded pane-item', tabindex: -1, =>
+    @div class: 'plantuml-toolkit padded pane-item', tabindex: -1, =>
       @div class: 'plantuml-control', outlet: 'control', =>
         @div =>
           @input id: 'zoomToFit', type: 'checkbox', outlet: 'zoomToFit'
@@ -54,10 +54,10 @@ class PlantumlPreviewView extends ScrollView
 
   attached: ->
     if @editor?
-      @useTempDir.attr('checked', atom.config.get('plantuml-bundle.previewSettings.useTempDir'))
-      @outputFormat.val atom.config.get('plantuml-bundle.previewSettings.outputFormat')
+      @useTempDir.attr('checked', atom.config.get('plantuml-toolkit.previewSettings.useTempDir'))
+      @outputFormat.val atom.config.get('plantuml-toolkit.previewSettings.outputFormat')
 
-      @zoomToFit.attr('checked', atom.config.get('plantuml-bundle.previewSettings.zoomToFit'))
+      @zoomToFit.attr('checked', atom.config.get('plantuml-toolkit.previewSettings.zoomToFit'))
       checkHandler = (checked) =>
         @setZoomFit(checked)
       @on 'change', '#zoomToFit', ->
@@ -70,7 +70,7 @@ class PlantumlPreviewView extends ScrollView
       @outputFormat.change ->
         saveHandler()
 
-      if atom.config.get 'plantuml-bundle.previewSettings.bringFront'
+      if atom.config.get 'plantuml-toolkit.previewSettings.bringFront'
         @disposables.add atom.workspace.onDidChangeActivePaneItem (item) =>
           if item is @editor
             pane = atom.workspace.paneForItem(this)
@@ -78,19 +78,19 @@ class PlantumlPreviewView extends ScrollView
               pane.activateItem this
 
       atom.commands.add @element,
-        'plantuml-bundle:preview-zoom-in': =>
+        'plantuml-toolkit:preview-zoom-in': =>
           @imageInfo.scale = @imageInfo.scale * 1.1
           @scaleImages()
-        'plantuml-bundle:preview-zoom-out': =>
+        'plantuml-toolkit:preview-zoom-out': =>
           @imageInfo.scale = @imageInfo.scale * 0.9
           @scaleImages()
-        'plantuml-bundle:preview-zoom-reset': =>
+        'plantuml-toolkit:preview-zoom-reset': =>
           @imageInfo.scale = 1
           @scaleImages()
-        'plantuml-bundle:preview-zoom-fit': =>
+        'plantuml-toolkit:preview-zoom-fit': =>
           @zoomToFit.prop 'checked', !@zoomToFit.is(':checked')
           @setZoomFit @zoomToFit.is(':checked')
-        'plantuml-bundle:copy-image': (event) =>
+        'plantuml-toolkit:copy-image': (event) =>
           filename = $(event.target).closest('.uml-image').attr('file')
           ext = path.extname(filename)
           switch ext
@@ -99,24 +99,24 @@ class PlantumlPreviewView extends ScrollView
               try
                 clipboard.writeImage(filename)
               catch err
-                atom.notifications.addError "plantuml-bundle: Copy Failed", detail: "Error attempting to copy: #{filename}\nSee console for details.", dismissable: true
+                atom.notifications.addError "plantuml-toolkit: Copy Failed", detail: "Error attempting to copy: #{filename}\nSee console for details.", dismissable: true
                 console.log err
             when '.svg'
               try
                 buffer = fs.readFileSync(filename, @editor.getEncoding())
-                if atom.config.get 'plantuml-bundle.previewSettings.beautifyXml'
+                if atom.config.get 'plantuml-toolkit.previewSettings.beautifyXml'
                   beautify_html ?= require('js-beautify').html
                   buffer = beautify_html buffer
                 atom.clipboard.write(buffer)
               catch err
-                atom.notifications.addError "plantuml-bundle: Copy Failed", detail: "Error attempting to copy: #{filename}\nSee console for details.", dismissable: true
+                atom.notifications.addError "plantuml-toolkit: Copy Failed", detail: "Error attempting to copy: #{filename}\nSee console for details.", dismissable: true
                 console.log err
             else
-              atom.notifications.addError "plantuml-bundle: Unsupported File Format", detail: "#{ext} is not currently supported by 'Copy Diagram'.", dismissable: true
-        'plantuml-bundle:open-file': (event) ->
+              atom.notifications.addError "plantuml-toolkit: Unsupported File Format", detail: "#{ext} is not currently supported by 'Copy Diagram'.", dismissable: true
+        'plantuml-toolkit:open-file': (event) ->
           filename = $(event.target).closest('.open-file').attr('file')
           atom.workspace.open filename
-        'plantuml-bundle:copy-filename': (event) ->
+        'plantuml-toolkit:copy-filename': (event) ->
           filename = $(event.target).closest('.copy-filename').attr('file')
           atom.clipboard.write filename
 
@@ -128,7 +128,7 @@ class PlantumlPreviewView extends ScrollView
 
   getURI: ->
     if @editor?
-      "plantuml-bundle://editor/#{@editor.id}"
+      "plantuml-toolkit://editor/#{@editor.id}"
 
   getTitle: ->
     if @editor?
@@ -142,7 +142,7 @@ class PlantumlPreviewView extends ScrollView
 
   addImages: (imgFiles, time) ->
     @container.empty()
-    displayFilenames = atom.config.get('plantuml-bundle.previewSettings.displayFilename')
+    displayFilenames = atom.config.get('plantuml-toolkit.previewSettings.displayFilename')
     for file in imgFiles
       if displayFilenames
         div = $('<div/>')
@@ -256,7 +256,7 @@ class PlantumlPreviewView extends ScrollView
     settingError = false
 
     if @useTempDir.is(':checked')
-      directory = path.join os.tmpdir(), 'plantuml-bundle'
+      directory = path.join os.tmpdir(), 'plantuml-toolkit'
       if !fs.existsSync directory
         fs.mkdirSync directory
 
@@ -277,7 +277,7 @@ class PlantumlPreviewView extends ScrollView
       @addImages imgFiles, Date.now()
       return
 
-    command = atom.config.get 'plantuml-bundle.previewSettings.java'
+    command = atom.config.get 'plantuml-toolkit.previewSettings.java'
     if (command != 'java') and (!fs.isFileSync command)
       settingsError "#{command} is not a file.", 'Java Executable', command
       settingError = true
@@ -285,14 +285,14 @@ class PlantumlPreviewView extends ScrollView
     jarLocation = path.join(__dirname, '../vendor', 'plantuml.jar')
 
     if !fs.isFileSync jarLocation
-      jarPathInConfig = atom.config.get('plantuml-bundle.previewSettings.jarPlantuml')
+      jarPathInConfig = atom.config.get('plantuml-toolkit.previewSettings.jarPlantuml')
       if !fs.isFileSync jarPathInConfig
         settingsError "Could not locate PlantUML's JAR. Please set 'PlantUML Jar Path' in configuration", 'PlantUML Jar', jarLocation
         settingError = true
       else
         jarLocation = jarPathInConfig
 
-    dotLocation = atom.config.get('plantuml-bundle.previewSettings.dotLocation')
+    dotLocation = atom.config.get('plantuml-toolkit.previewSettings.dotLocation')
     if dotLocation != ''
       if !fs.isFileSync dotLocation
         settingsError "#{dotLocation} is not a file.", 'Graphvis Dot Executable', dotLocation
@@ -304,13 +304,13 @@ class PlantumlPreviewView extends ScrollView
       return
 
     args = ['-Djava.awt.headless=true', '-Xmx1024m', '-DPLANTUML_LIMIT_SIZE=16800']
-    javaAdditional = atom.config.get('plantuml-bundle.previewSettings.javaAdditional')
+    javaAdditional = atom.config.get('plantuml-toolkit.previewSettings.javaAdditional')
     if javaAdditional != ''
       args.push javaAdditional
 
     args.push '-jar', jarLocation
 
-    jarAdditional = atom.config.get('plantuml-bundle.previewSettings.jarAdditional')
+    jarAdditional = atom.config.get('plantuml-toolkit.previewSettings.jarAdditional')
     if jarAdditional != ''
       args.push jarAdditional
     args.push '-charset', @editor.getEncoding()
@@ -326,7 +326,7 @@ class PlantumlPreviewView extends ScrollView
     exitHandler = (files) =>
       for file in files
         if fs.isFileSync file
-          if atom.config.get('plantuml-bundle.previewSettings.beautifyXml') and (format == 'svg')
+          if atom.config.get('plantuml-toolkit.previewSettings.beautifyXml') and (format == 'svg')
             beautify_html ?= require('js-beautify').html
             buffer = fs.readFileSync(file, @editor.getEncoding())
             buffer = beautify_html buffer
@@ -339,11 +339,11 @@ class PlantumlPreviewView extends ScrollView
         if str.match ///jarfile///i
           settingsError str, 'PlantUML Jar', jarLocation
         else
-          console.log "plantuml-bundle: stderr\n#{str}"
+          console.log "plantuml-toolkit: stderr\n#{str}"
       if outputlog.length > 0
         str = outputlog.join('')
-        atom.notifications.addInfo "plantuml-bundle: stdout (logged to console)", detail: str, dismissable: true
-        console.log "plantuml-bundle: stdout\n#{str}"
+        atom.notifications.addInfo "plantuml-toolkit: stdout (logged to console)", detail: str, dismissable: true
+        console.log "plantuml-toolkit: stdout\n#{str}"
 
     exit = (code) ->
       exitHandler imgFiles

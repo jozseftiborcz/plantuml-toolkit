@@ -1,8 +1,8 @@
-Copyright for portions of plantuml-bundle are held by [@peele, 2015] as
+Copyright for portions of plantuml-toolkit are held by [@peele, 2015] as
 part of plantuml-preview, [Pedro Lafuente Blanco (@plafue), 2015] as
 part of language-plantuml and [Markus Hedvall (@markushedvall), 2015] as
 part of node-plantuml.
-All other copyright for plantuml-bundle are held by [Capco, 2019].
+All other copyright for plantuml-toolkit are held by [Capco, 2019].
 
 Copyright (c) 2019 Capco Inc.
 

@@ -1,4 +1,4 @@
-# PlantUML Bundle
+# PlantUML Toolkit
 
 A fork of [plantuml-preview](https://github.com/peele/plantuml-preview/) with syntax highlighting rules from [language-plantuml](https://github.com/plafue/language-plantuml/), automatic configuration of plantuml's jar from [node-plantuml](https://www.npmjs.com/package/node-plantuml) and new features.
 
@@ -8,7 +8,7 @@ A fork of [plantuml-preview](https://github.com/peele/plantuml-preview/) with sy
 
 ![plantuml-preview screenshot](bulk-generation.gif)
 
-#### > plantuml-bundle
+#### > plantuml-toolkit
 - Bulk generation of diagram's images
   - Can generate the images (PNG, SVG and TXT) for ALL diagrams of a folder
 - Extensible Snippets

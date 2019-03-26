@@ -1,4 +1,4 @@
-PlantumlPreview = require '../lib/plantuml-bundle'
+PlantumlPreview = require '../lib/plantuml-toolkit'
 
 # Use the command `window:run-package-specs` (cmd-alt-ctrl-p) to run specs.
 #
@@ -10,30 +10,30 @@ describe "PlantumlPreview", ->
 
   beforeEach ->
     workspaceElement = atom.views.getView(atom.workspace)
-    activationPromise = atom.packages.activatePackage('plantuml-bundle')
+    activationPromise = atom.packages.activatePackage('plantuml-toolkit')
 
-  describe "when the plantuml-bundle:togglePreview event is triggered", ->
+  describe "when the plantuml-toolkit:togglePreview event is triggered", ->
     it "hides and shows the modal panel", ->
       # Before the activation event the view is not on the DOM, and no panel
       # has been created
-      expect(workspaceElement.querySelector('.plantuml-bundle')).not.toExist()
+      expect(workspaceElement.querySelector('.plantuml-toolkit')).not.toExist()
 
       # This is an activation event, triggering it will cause the package to be
       # activated.
-      atom.commands.dispatch workspaceElement, 'plantuml-bundle:togglePreview'
+      atom.commands.dispatch workspaceElement, 'plantuml-toolkit:togglePreview'
 
       waitsForPromise ->
         activationPromise
 
       runs ->
-        expect(workspaceElement.querySelector('.plantuml-bundle')).toExist()
+        expect(workspaceElement.querySelector('.plantuml-toolkit')).toExist()
 
-        plantumlPreviewElement = workspaceElement.querySelector('.plantuml-bundle')
+        plantumlPreviewElement = workspaceElement.querySelector('.plantuml-toolkit')
         expect(plantumlPreviewElement).toExist()
 
         plantumlPreviewPanel = atom.workspace.panelForItem(plantumlPreviewElement)
         expect(plantumlPreviewPanel.isVisible()).toBe true
-        atom.commands.dispatch workspaceElement, 'plantuml-bundle:togglePreview'
+        atom.commands.dispatch workspaceElement, 'plantuml-toolkit:togglePreview'
         expect(plantumlPreviewPanel.isVisible()).toBe false
 
     it "hides and shows the view", ->
@@ -45,18 +45,18 @@ describe "PlantumlPreview", ->
       # workspaceElement to the DOM are generally slower than those off DOM.
       jasmine.attachToDOM(workspaceElement)
 
-      expect(workspaceElement.querySelector('.plantuml-bundle')).not.toExist()
+      expect(workspaceElement.querySelector('.plantuml-toolkit')).not.toExist()
 
       # This is an activation event, triggering it causes the package to be
       # activated.
-      atom.commands.dispatch workspaceElement, 'plantuml-bundle:togglePreview'
+      atom.commands.dispatch workspaceElement, 'plantuml-toolkit:togglePreview'
 
       waitsForPromise ->
         activationPromise
 
       runs ->
         # Now we can test for view visibility
-        plantumlPreviewElement = workspaceElement.querySelector('.plantuml-bundle')
+        plantumlPreviewElement = workspaceElement.querySelector('.plantuml-toolkit')
         expect(plantumlPreviewElement).toBeVisible()
-        atom.commands.dispatch workspaceElement, 'plantuml-bundle:togglePreview'
+        atom.commands.dispatch workspaceElement, 'plantuml-toolkit:togglePreview'
         expect(plantumlPreviewElement).not.toBeVisible()

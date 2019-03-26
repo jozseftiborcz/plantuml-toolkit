@@ -5,7 +5,7 @@
       'submenu': [
           {
               'label': 'Preview'
-              'command': 'plantuml-bundle:togglePreview'
+              'command': 'plantuml-toolkit:togglePreview'
           }
       ]
     }
@@ -16,53 +16,53 @@
       'submenu': [
         {
           'label': 'Generate PNG'
-          'command': 'plantuml-bundle:generatePNG'
+          'command': 'plantuml-toolkit:generatePNG'
         }
         {
         'label': 'Generate SVG'
-        'command': 'plantuml-bundle:generateSVG'
+        'command': 'plantuml-toolkit:generateSVG'
         }
         {
         'label': 'Generate TXT'
-        'command': 'plantuml-bundle:generateTXT'
+        'command': 'plantuml-toolkit:generateTXT'
         }
       ]
     }
   ]
-  '.plantuml-bundle': [
+  '.plantuml-toolkit': [
     {
       'label': 'Toggle Zoom To Fit'
-      'command': 'plantuml-bundle:preview-zoom-fit'
+      'command': 'plantuml-toolkit:preview-zoom-fit'
     }
     {
       'label': 'Zoom In'
-      'command': 'plantuml-bundle:preview-zoom-in'
+      'command': 'plantuml-toolkit:preview-zoom-in'
     }
     {
       'label': 'Zoom Out'
-      'command': 'plantuml-bundle:preview-zoom-out'
+      'command': 'plantuml-toolkit:preview-zoom-out'
     }
     {
       'label': 'Reset Zoom'
-      'command': 'plantuml-bundle:reset-zoom'
+      'command': 'plantuml-toolkit:reset-zoom'
     }
   ]
-  '.plantuml-bundle .uml-image': [
+  '.plantuml-toolkit .uml-image': [
     {
       'label': 'Copy Diagram'
-      'command': 'plantuml-bundle:copy-image'
+      'command': 'plantuml-toolkit:copy-image'
     }
   ]
-  '.plantuml-bundle .copy-filename': [
+  '.plantuml-toolkit .copy-filename': [
     {
       'label': 'Copy Filename'
-      'command': 'plantuml-bundle:copy-filename'
+      'command': 'plantuml-toolkit:copy-filename'
     }
   ]
-  '.plantuml-bundle .open-file': [
+  '.plantuml-toolkit .open-file': [
     {
       'label': 'Open Diagram'
-      'command': 'plantuml-bundle:open-file'
+      'command': 'plantuml-toolkit:open-file'
     }
   ]
 'menu': [
@@ -73,7 +73,7 @@
       'submenu': [
         {
           'label': 'Preview'
-          'command': 'plantuml-bundle:togglePreview'
+          'command': 'plantuml-toolkit:togglePreview'
         }
       ]
     ]

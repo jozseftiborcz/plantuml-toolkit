@@ -86,7 +86,7 @@ module.exports =
           order: 8
         useTempDir:
           title: 'Use Temp Directory'
-          description: 'Output diagrams to {OS Temp Dir}/plantuml-bundle/'
+          description: 'Output diagrams to {OS Temp Dir}/plantuml-toolkit/'
           type: 'boolean'
           default: true
           order: 9
@@ -98,18 +98,18 @@ module.exports =
           order: 10
 
   initialize: (serializeState) ->
-      console.log "Initializing plantuml-bundle"
+      console.log "Initializing plantuml-toolkit"
       atom.commands.add 'atom-workspace',
-        'plantuml-bundle:togglePreview': -> toggle()
-        'plantuml-bundle:generatePNG': -> generate 'png'
-        'plantuml-bundle:generateSVG': -> generate 'svg'
-        'plantuml-bundle:generateTXT': -> generate 'utxt'
+        'plantuml-toolkit:togglePreview': -> toggle()
+        'plantuml-toolkit:generatePNG': -> generate 'png'
+        'plantuml-toolkit:generateSVG': -> generate 'svg'
+        'plantuml-toolkit:generateTXT': -> generate 'utxt'
 
       os ?= require 'os'
       fs ?= require 'fs-plus'
       path ?= require 'path'
 
-      command = atom.config.get 'plantuml-bundle.previewSettings.java'
+      command = atom.config.get 'plantuml-toolkit.previewSettings.java'
       if (command != 'java') and (!fs.isFileSync command)
         notifyError 'Java Executable', "#{command} is not a file."
         settingError = true
@@ -117,26 +117,26 @@ module.exports =
       jarLocation = path.join(__dirname, '../vendor', 'plantuml.jar')
 
       if !fs.isFileSync jarLocation
-        jarPathInConfig = atom.config.get('plantuml-bundle.previewSettings.jarPlantuml')
+        jarPathInConfig = atom.config.get('plantuml-toolkit.previewSettings.jarPlantuml')
         if !fs.isFileSync jarPathInConfig
             settingsError 'PlantUML Jar', "Could not locate PlantUML's JAR [path=#{jarPathInConfig}]. Please set 'PlantUML Jar Path' in configuration"
             settingError = true
         else
             jarLocation = jarPathInConfig
 
-      dotLocation = atom.config.get('plantuml-bundle.previewSettings.dotLocation')
+      dotLocation = atom.config.get('plantuml-toolkit.previewSettings.dotLocation')
       if dotLocation != ''
         if !fs.isFileSync dotLocation
             settingsError 'Graphvis Dot Executable', "#{dotLocation} is not a file."
             settingError = true
 
   activate: ->
-      console.log "Activating plantuml-bundle"
-      snippetsPath = atom.config.get('plantuml-bundle.languageSettings.snippetsPath')
+      console.log "Activating plantuml-toolkit"
+      snippetsPath = atom.config.get('plantuml-toolkit.languageSettings.snippetsPath')
       if snippetsPath != ''
         fs.isDirectory snippetsPath, (isDirectory) ->
           if !isDirectory
-            settingsError 'Custom Snippets', "The path [#{snippetsPath}] set in plantuml-bundle configuration is not a valid directory"
+            settingsError 'Custom Snippets', "The path [#{snippetsPath}] set in plantuml-toolkit configuration is not a valid directory"
             settingError = true
           else
             snippetsPackage = atom.packages.getLoadedPackage('snippets')
@@ -144,9 +144,9 @@ module.exports =
 
       @openerDisposable = atom.workspace.addOpener (uriToOpen) ->
         {protocol, host, pathname} = url.parse uriToOpen
-        return unless protocol is 'plantuml-bundle:'
+        return unless protocol is 'plantuml-toolkit:'
 
-        PlantumlPreviewView ?= require './plantuml-bundle-view'
+        PlantumlPreviewView ?= require './plantuml-toolkit-view'
         new PlantumlPreviewView(editorId: pathname.substring(1))
 
   deactivate: ->
@@ -159,7 +159,7 @@ loadCustomSnippets = (snippetsModule, customSnippetsPath) ->
       settingError = true
     else
       snippetsModule.onDidLoadSnippets ->
-        packageSnippets = snippetsModule.snippetsByPackage.get('plantuml-bundle')
+        packageSnippets = snippetsModule.snippetsByPackage.get('plantuml-toolkit')
         selectedPackageFilePath = Object.keys(packageSnippets)[0]
         atom.config.transact =>
           for filepath, snippetsBySelector of loadedSnippets
@@ -175,13 +175,13 @@ settingsError = (title, message) ->
     detail: message
     dismissable: true
   }
-  atom.notifications.addError "plantuml-bundle: #{title}", options
+  atom.notifications.addError "plantuml-toolkit: #{title}", options
 
 uriForEditor = (editor) ->
-  "plantuml-bundle://editor/#{editor.id}"
+  "plantuml-toolkit://editor/#{editor.id}"
 
 isPlantumlPreviewView = (object) ->
-  PlantumlPreviewView ?= require './plantuml-bundle-view'
+  PlantumlPreviewView ?= require './plantuml-toolkit-view'
   object instanceof PlantumlPreviewView
 
 removePreviewForEditor = (editor) ->
@@ -222,7 +222,7 @@ notifyError = (title, message) ->
     detail: message,
     dismissable: true
   }
-  atom.notifications.addError "plantuml-bundle: #{title}", options
+  atom.notifications.addError "plantuml-toolkit: #{title}", options
 
 generate = (imageType) ->
   if settingError
@@ -252,13 +252,13 @@ generate = (imageType) ->
     destinationDir = dirRequest + '/images'
 
     args = ['-Djava.awt.headless=true', '-Xmx1024m', '-DPLANTUML_LIMIT_SIZE=16800']
-    javaAdditional = atom.config.get('plantuml-bundle.previewSettings.javaAdditional')
+    javaAdditional = atom.config.get('plantuml-toolkit.previewSettings.javaAdditional')
     if javaAdditional != ''
       args.push javaAdditional
 
     args.push '-jar', jarLocation
 
-    jarAdditional = atom.config.get('plantuml-bundle.previewSettings.jarAdditional')
+    jarAdditional = atom.config.get('plantuml-toolkit.previewSettings.jarAdditional')
     if jarAdditional != ''
       args.push jarAdditional
     args.push '-failfast2'
@@ -274,7 +274,7 @@ generate = (imageType) ->
     exitHandler = (files) =>
       for file in files
         if fs.isFileSync file
-          if atom.config.get('plantuml-bundle.previewSettings.beautifyXml') and (format == 'svg')
+          if atom.config.get('plantuml-toolkit.previewSettings.beautifyXml') and (format == 'svg')
             beautify_html ?= require('js-beautify').html
             buffer = fs.readFileSync(file, DEFAULT_ENCODING)
             buffer = beautify_html buffer
@@ -288,21 +288,21 @@ generate = (imageType) ->
       if str.match ///jarfile///i
         notifyError 'PlantUML Jar', str + " [#{jarLocation}]"
       else
-        console.log "plantuml-bundle: stderr\n#{str}"
+        console.log "plantuml-toolkit: stderr\n#{str}"
       if outputlog.length > 0
         str = outputlog.join('')
 
-      atom.notifications.addInfo "plantuml-bundle: stdout (logged to console)", detail: str, dismissable: true
-      console.log "plantuml-bundle: stdout\n#{str}"
+      atom.notifications.addInfo "plantuml-toolkit: stdout (logged to console)", detail: str, dismissable: true
+      console.log "plantuml-toolkit: stdout\n#{str}"
 
     exit = (code) ->
       #exitHandler imgFiles
       console.log code
       if code == 100
         if isDir
-          atom.notifications.addWarning "plantuml-bundle: No diagrams", detail: "No diagrams found in folder #{dirRequest}", dismissable: true
+          atom.notifications.addWarning "plantuml-toolkit: No diagrams", detail: "No diagrams found in folder #{dirRequest}", dismissable: true
         else
-          atom.notifications.addWarning "plantuml-bundle: Not a diagram", detail: "#{selectedItemPath} is not a supported diagram", dismissable: true
+          atom.notifications.addWarning "plantuml-toolkit: Not a diagram", detail: "#{selectedItemPath} is not a supported diagram", dismissable: true
       else if code == 200
         if isDir
           notifyError 'Syntax error', "There are syntax errors in one or more diagrams: #{dirRequest}"
@@ -310,9 +310,9 @@ generate = (imageType) ->
           notifyError 'Syntax error', "There are syntax errors in #{selectedItemPath}"
       else if code == 0
         if isDir
-          atom.notifications.addSuccess "plantuml-bundle: Success", detail: "The diagrams were successfully generated", dismissable: true
+          atom.notifications.addSuccess "plantuml-toolkit: Success", detail: "The diagrams were successfully generated", dismissable: true
         else
-          atom.notifications.addSuccess "plantuml-bundle: Success", detail: "The diagram was successfully generated", dismissable: true
+          atom.notifications.addSuccess "plantuml-toolkit: Success", detail: "The diagram was successfully generated", dismissable: true
       else
         notifyError 'Unexpected error', "An unexpected error occurred."
     stdout = (output) ->
