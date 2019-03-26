@@ -11,9 +11,9 @@
     "uml",
     "preview"
   ],
-  "repository": "https://github.com/Capco/plantuml-bundle",
+  "repository": "https://github.com/capcodigital/plantuml-bundle",
   "bugs": {
-    "url": "https://github.com/issues?utf8=%E2%9C%93&q=is%3Aissue+user%3ACapco"
+    "url": "https://github.com/issues?utf8=%E2%9C%93&q=is%3Aissue+user%3Acapcodigital"
   },
   "license": "MIT",
   "engines": {
