@@ -17,6 +17,7 @@ atom-pane-container atom-pane .item-views {
   color: @text-color;
   text-align: center;
   padding: @component-padding;
+
   div {
     display: inline;
     padding-left: @component-padding;
@@ -43,6 +44,10 @@ atom-pane-container atom-pane .item-views {
       box-shadow: none;
       background-color: @button-background-color-hover;
     }
+  }
+
+  input[type="text"]#selectedText {
+      display: none;
   }
 
   //Copied from settings-view.less, modifed
@@ -139,5 +144,8 @@ atom-pane-container atom-pane .item-views {
     background-position: top center;
     padding-top: 70px;
     text-align: center;
+  }
+  text {
+      cursor: pointer;
   }
 }

@@ -41,8 +41,9 @@ class PlantumlPreviewView extends ScrollView
           @select outlet: 'outputFormat', =>
             @option value: 'png', 'png'
             @option value: 'svg', 'svg'
+          # selectedText is invisible -> see plantuml-toolkit.less
+          @input id: 'selectedText', type: 'text', outlet: 'selectedText'
       @div class: 'plantuml-container', outlet: 'container'
-
   constructor: ({@editorId}) ->
     super
     @editor = editorForId @editorId
@@ -69,6 +70,11 @@ class PlantumlPreviewView extends ScrollView
         saveHandler()
       @outputFormat.change ->
         saveHandler()
+
+      selectedInDiagramHandler = (value) =>
+        @selectTextInEditor value
+      @selectedText.change ->
+        selectedInDiagramHandler(this.value)
 
       if atom.config.get 'plantuml-toolkit.previewSettings.bringFront'
         @disposables.add atom.workspace.onDidChangeActivePaneItem (item) =>
@@ -152,9 +158,22 @@ class PlantumlPreviewView extends ScrollView
         @container.append div
       imageInfo = @imageInfo
       zoomToFit = @zoomToFit.is(':checked')
+      isSVG = path.extname(file) == '.svg'
+
       img = $('<img/>')
         .attr('src', "#{file}?time=#{time}")
-        .attr('file', file)
+
+      if isSVG
+        img = $('<object/>')
+          .attr('data', "#{file}?time=#{time}")
+          .attr('type', "image/svg+xml")
+
+        buffer = fs.readFileSync(file, 'UTF-8')
+        if buffer.indexOf('<svg onclick') < 0 # only insert script if it was not inserted already
+          buffer = buffer.replace "<svg ", '<svg onclick="if(window.parent.svgElementClicked) window.parent.svgElementClicked(event)" '
+          fs.writeFileSync(file, buffer, 'UTF-8')
+
+      img.attr('file', file)
         .load ->
           img = $(this)
           file = img.attr 'file'
@@ -170,10 +189,21 @@ class PlantumlPreviewView extends ScrollView
           img.attr('width', imageInfo.scale * info.origWidth)
           img.attr('height', imageInfo.scale * info.origHeight)
           img.attr('class', 'uml-image open-file copy-filename')
+
           if zoomToFit
             img.addClass('zoomToFit')
 
       @container.append img
+    @container.append '
+    <script type="text/javascript">
+      function svgElementClicked(event) {
+        if(event.srcElement.tagName == "text") {
+          elm = document.getElementById("selectedText");
+          elm.value = event.srcElement.innerHTML;
+          elm.dispatchEvent(new Event("change"));
+        }
+      }
+    </script>'
     @container.show
 
   scaleImages: ->
@@ -190,6 +220,19 @@ class PlantumlPreviewView extends ScrollView
     @container.empty()
     @container.append $('<div/>').attr('class', 'throbber')
     @container.show
+
+  selectTextInEditor: (text) ->
+    console.log text
+    console.log @editor
+    editor = @editor
+    buffer = @editor.buffer
+    searchText = text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
+    buffer.findAll(searchText).then (ranges) ->
+      if ranges.length > 0
+        editor.clearSelections()
+        for range in ranges
+          editor.addSelectionForBufferRange(range)
+
 
   setZoomFit: (checked) ->
     if checked
