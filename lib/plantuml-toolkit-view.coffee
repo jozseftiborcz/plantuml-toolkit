@@ -184,6 +184,10 @@ class PlantumlPreviewView extends ScrollView
             info = {}
           info.origWidth = img.width()
           info.origHeight = img.height()
+          if isSVG
+            svgAttr = img.context.contentDocument.childNodes[0].attributes
+            info.origWidth = svgAttr.getNamedItem('width').nodeValue.replace("px", "")
+            info.origHeight = svgAttr.getNamedItem('height').nodeValue.replace("px", "")
           imageInfo[name] = info
 
           img.attr('width', imageInfo.scale * info.origWidth)
@@ -222,8 +226,6 @@ class PlantumlPreviewView extends ScrollView
     @container.show
 
   selectTextInEditor: (text) ->
-    console.log text
-    console.log @editor
     editor = @editor
     buffer = @editor.buffer
     searchText = text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
