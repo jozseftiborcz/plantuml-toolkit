@@ -3,159 +3,133 @@
     'prefix':'starts'
     'body': """
       @startuml
-      'Import Sequence diagram style
-      !include ../../atom_files/styles/sequence.puml
-
-      'diagram title'
-      title ${1:TITLE}
-
-      'a brief description of the diagram'
-      legend top
-      -- \\\\t**Abstract:**\\\\t --
-      ${2:DIAGRAM_DESCRIPTION}
-      end legend
-
-      'a list of the actors - type actor|participant|database|queue to get template'
-      actor "${3:TITLE}" as ${4:ALIAS}
-
+      title The Title
+      actor Foo1
+      box "A Box Title" #LightBlue
+      boundary Foo2
+      control Foo3
+      end box
+      entity Foo4
+      database Foo5
+      participant Foo6 as Foo6 << Generated >>
+      participant Foo7 << (F,#ADD1B2) >>
+      Foo1 -> Foo2 : To boundary
+      Foo1 -> Foo3 : To control
+      activate Foo3
+      deactivate Foo3
+      Foo1 -> Foo4 : To entity
+      note left
+        a note
+        on several lines
+      end note
+      == More Features ==
+      Foo1 -> Foo5 : To database
+      Foo1 -> Foo6
+      Foo1 -> Foo1 : To self
+      ||45||
+      alt successful case
+      Foo1 -> Foo2: Successful condition
+      else some kind of failure
+      Foo1 -> Foo4: Failed condition
+      end
       @enduml
     """
-
   'Start Use Case Diagram':
     'prefix': 'startu'
     'body' : """
       @startuml
-      'Import Use Case diagram style
-      !include ../../atom_files/styles/usecase.puml
-
-      'Key'
-      legend bottom left
-      -- **Key** --
-      <color green>**GREEN**</color> = Next API exists, no change required
-      <color yellow>**YELLOW**</color> = Next API exists, change required
-      <color red>**RED**</color> = Next API does not exist, new API required
-      <color grey>**GREY**</color> = Delivered as part of different PB
-      end legend
-
-      'diagram title'
-      title ${1:TITLE}
-
-      'a brief description of the diagram'
-      legend top
-      -- \\\\t**Abstract:**\\\\t --
-      ${2:DIAGRAM_DESCRIPTION}
-      end legend
-
-      'a list of the actors - type actor|participant|database|queue to get template'
-      $3
-
-      'a list of the usecases - type usecase to get template'
-      $4
-
-
+      title "Use Case Title"
+      'actors
+      actor User
+      actor Admin
+      actor "Another Actor" as AnotherActor
+      User <|-- Admin
+      'use cases
+      rectangle "A Rectangle" {
+        usecase UC3
+      }
+      usecase "Use the application" as UCUseTheApplication << Main >>
+      usecase UC1 as "You can use
+      several lines to define your usecase.
+      You can also use separators.
+      --
+      Several separators are possible.
+      ==
+      And you can add titles:
+      ..Conclusion..
+      This allows large description."
+      ' uses
+      AnotherActor -> UCUseTheApplication
+      AnotherActor -> UC3
+      User .up.> UC1
+      User --> UCUseTheApplication : A small label
       @enduml
     """
-
   'Start Activity Diagram':
     'prefix': 'starta'
     'body': """
       @startuml
-      'Import Activity diagram style
-      !include ../../atom_files/styles/activity.puml
-
-      'diagram title'
-      title ${1:TITLE}
-
-      'a brief description of the diagram'
-      legend top
-      -- \\\\t**Abstract:**\\\\t --
-      ${2:DIAGRAM_DESCRIPTION}
-      end legend
-
-      $3
-
+      title Servlet Container
+      (*) --> "ClickServlet.handleRequest()"
+      --> "new Page"
+      if "Page.onSecurityCheck" then
+      ->[true] "Page.onInit()"
+      if "isForward?" then
+      ->[no] "Process controls"
+      if "continue processing?" then
+      -->[yes] ===RENDERING===
+      else
+      -->[no] ===REDIRECT_CHECK===
+      endif
+      else
+      -->[yes] ===RENDERING===
+      endif
+      if "is Post?" then
+      -->[yes] "Page.onPost()"
+      --> "Page.onRender()" as render
+      --> ===REDIRECT_CHECK===
+      else
+      -->[no] "Page.onGet()"
+      --> render
+      endif
+      else
+      -->[false] ===REDIRECT_CHECK===
+      endif
+      if "Do redirect?" then
+      ->[yes] "redirect request"
+      --> ==BEFORE_DESTROY===
+      else
+      if "Do Forward?" then
+      -left->[yes] "Forward request"
+      --> ==BEFORE_DESTROY===
+      else
+      -right->[no] "Render page template"
+      --> ==BEFORE_DESTROY===
+      endif
+      endif
+      --> "Page.onDestroy()"
+      -->(*)
       @enduml
     """
-
-  'Start Entity Relationship Diagram (ERD)':
-    'prefix': 'starte'
-    'body': """
-      @startuml
-      'Import ERD style
-      !include ../../atom_files/styles/erd.puml
-
-      'Key'
-      note as key #white
-      -- <size: 20><b>KEY</b></size> --
-
-      Primary Key = primary_key(BOLD)
-
-      Foreign Key = foreign_key(ITALICS)
-
-      Not Null = not_null(UNDERSCORED)
-
-      Unique = unique(GREEN)
-
-      New/Changed = new_column(BLUE)
-
-      end note
-
-      'diagram title'
-      title ${1:TITLE}
-
-      'a brief description of the diagram'
-      legend top
-      -- \\\\t**Abstract:**\\\\t --
-      ${2:DIAGRAM_DESCRIPTION}
-      end legend
-
-      'entities'
-      table(${3:TABLE_ALIAS}, "${3:TABLE_NAME}") {
-      'table primary key'
-      primary_key(${3:TABLE_PRIMARY_KEY}_UID)
-      --
-      'table columns'
-      {field} ${4:TABLE_COLUMN}
-
-      }
-
-      'entity relationships'
-
-
-
-      @enduml
-    """
-
-
-
   'Package':
     'prefix': 'pack'
     'body': """
     package ${1:name} <<${2:Folder|Cloud|Rect|Database|Frame>>}
     """
-
-
-
-
   'Start Class Diagram':
     'prefix': 'startz'
     'body': """
       @startuml
-      'Import Class diagram style
-      !include ../../atom_files/styles/class.puml
-
       ' package and class defs
       package BigPackage <<Folder>> {
         class ArrayList
         abstract class List
-
         ArrayList .up.|> List
         class Class13
         class Class17
         class Class18
         class Class19
         class Class20
-
         enum TimeUnit {
         DAYS
         HOURS
@@ -163,7 +137,6 @@
         }
         annotation SuppressWarnings
       }
-
       package java.lang <<Rect>> {
         interface Runnable {
           run():void
@@ -181,9 +154,7 @@
         }
         class Class02
       }
-
       class Class15 <? extends Element > {
-
       }
       package FPackage <<Frame>> {
         class Class05
@@ -193,15 +164,11 @@
       package Package11 <<Database>> {
         class Class10
         class Class04
-
         Class05 o-- Class06
         Class05 .. Class08
         Class05 -- Class10
         Class04 *-- Class05
-
       }
-
-
       note "This is a floating note" as N1
       Class01 -- N1
       ' relationship
@@ -210,19 +177,13 @@
       Class15 .> Class20 : label
       Class17 ..|> Class20
       Class19 <--* Class20
-
-
       @enduml
-
     """
 
   'Start Component Diagram':
     'prefix': 'startc'
     'body' : """
       @startuml
-      'Import Component diagram style
-      !include ../../atom_files/styles/component.puml
-
       title The Title
       skinparam componentStyle uml2
       package "Some Group" {
@@ -268,22 +229,30 @@
     'prefix': 'startt'
     'body': """
       @startuml
-      'Import State diagram style
-      !include ../../atom_files/styles/sate.puml
-
-      'diagram title'
-      title ${1:title}
-
-      'a brief description of the diagram'
-      legend top
-      -- \\\\t**Abstract:**\\\\t --
-      ${2:DIAGRAM_DESCRIPTION}
-      end legend
-
-      'states'
-
-
-
+      title The Title
+      [*] --> NotShooting
+      state NotShooting {
+        [*] --> Idle
+        Idle --> Configuring : EvConfig
+        Configuring --> Idle : EvConfig
+      }
+      state Configuring {
+        [*] --> NewValueSelection
+        NewValueSelection --> NewValuePreview : EvNewValue
+        NewValuePreview --> NewValueSelection : EvNewValueRejected
+        NewValuePreview --> NewValueSelection : EvNewValueSaved
+        state NewValuePreview {
+          State1 -> State2
+        }
+      }
+      note left of NotShooting
+        out of ammo
+      end note
+      note as N1
+        A note can also
+        be defined on
+        several lines
+      end note
       @enduml
     """
 
@@ -292,9 +261,6 @@
     'body': """
     @startuml
     $1
-
-
-
     @enduml
     """
   'New Page (Use Case Diagram)':
@@ -314,172 +280,20 @@
       $3
     }
     """
-  'NODE':
+  'Node':
     'prefix': 'node'
     'body' : """
-    node "${1:TITLE}" as ${2:ALIAS}
-    """
-  'Actor':
-    'prefix': 'actor'
-    'body' : """
-      actor "${1:TITLE}" as ${2:ALIAS}
+    node "${1:title}" as ${2:alias} {
+      $3
+    }
     """
   'Database':
     'prefix': 'database'
     'body' : """
-      database "${1:TITLE}" as ${2:ALIAS}
-    """
-  'Participant':
-    'prefix': 'participant'
-    'body' : """
-      participant "${1:TITLE}" as ${2:ALIAS}
-    """
-
-  'Queue':
-    'prefix': 'queue'
-    'body' : """
-      queue "${1:TITLE}" as ${2:ALIAS}
-    """
-
-  'Usecase':
-    'prefix': 'usecase'
-    'body' : """
-      usecase UC${1: USECASE_NUMBER} #${2:COLOR} as "**UC${1: USECASE_NUMBER}**
-      --
-      ${3:USECASE_NAME}
-      "
-    """
-  'Table':
-    'prefix': 'table'
-    'body': """
-      table(${1:TABLE_ALIAS}, "${1:TABLE_NAME}") {
-      'table primary key'
-      primary_key(${1:TABLE_PRIMARY_KEY}_UID)
-      --
-      'table columns'
-      {field} ${2:TABLE_COLUMN}
+      database "${1:title}" as ${2:alias} {
+        $3
       }
-     """
-
-  'State':
-    'prefix': 'state'
-    'body' : """
-      state "${1:TITLE}" as ${2:ALIAS} : ${3:DESCRIPTION}
     """
-
-  'Note':
-    'prefix': 'note'
-    'body': """
-    note ${1:PLACEMENT} of ${2:NODE}
-    **Note:**
-    $3
-    end note
-    """
-
-  'Rnote':
-    'prefix': 'rnote'
-    'body': """
-    rnote ${1:PLACEMENT} of ${2:NODE}
-    **Note:**
-    $3
-    end note
-    """
-
-  'Assumption':
-    'prefix': 'assumption'
-    'body': """
-    note ${1:PLACEMENT} of ${2:NODE} #aqua
-    **Assumption:**
-    $3
-    end note
-    """
-
-  'Clarification':
-    'prefix': 'clarification'
-    'body': """
-    note ${1:PLACEMENT} of ${2:NODE} #coral
-    **Clarification:**
-    $3
-    end note
-    """
-
-  'Endpoint':
-    'prefix': 'endpoint'
-    'body': """
-    note ${1:PLACEMENT} of ${2:NODE} #plum
-    **Endpoint:**
-    $3
-
-    **Current implementation:**
-    $4
-
-    **Required implementation:**
-    <i>Either through extension of existing API or new,</i> $5
-
-
-    **ENSURE BACKWARDS COMPATIBILITY IS MAINTAINED**
-    end note
-    """
-
-  'Group':
-    'prefix': 'group'
-    'body': """
-    group ${1:INSERT_TEXT_HERE}
-        $2
-    end group
-    """
-
-  'Box':
-    'prefix': 'box'
-    'body': """
-    box "${1:INSERT_TEXT_HERE}" #${2:color}
-        $3
-    end box
-    """
-
-  'Loop':
-    'prefix': 'loop'
-    'body': """
-    loop #${1:transparent} ${2:INSERT_TEXT_HERE}
-        $3
-    end loop
-    """
-
-  'Alt':
-    'prefix': 'alt'
-    'body': """
-    alt #${1:transparent} ${2:INSERT_TEXT_HERE}
-        $3
-
-    else ${4:INSERT_TEXT_HERE}
-        $5
-
-    end alt
-    """
-
-  'Ref':
-    'prefix': 'ref'
-    'body': """
-    ref over ${1:ACTOR(s)}
-        $2
-    end ref
-    """
-
-  'Else':
-    'prefix': 'else'
-    'body': """
-    else ${1:INSERT_TEXT_HERE}
-        $2
-    """
-
-  'Legend':
-    'prefix': 'legend'
-    'body': """
-    legend ${1:PLACEMENT}
-        $2
-    end legend
-    """
-
   'Component':
     'prefix':'comp'
-    'body': 'component "${1:INSERT_TEXT_HERE}" as ${2:ALIAS}'
+'body': 'component "${1:title}" as ${2:alias}'

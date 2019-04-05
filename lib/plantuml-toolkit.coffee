@@ -7,7 +7,6 @@ beautify_html = null
 os = null
 PlantumlPreviewView = null
 DEFAULT_ENCODING = 'UTF-8'
-selectedFilePath = null
 settingError = false
 command = null
 jarLocation = null
@@ -142,15 +141,40 @@ module.exports =
             snippetsPackage = atom.packages.getLoadedPackage('snippets')
             loadCustomSnippets snippetsPackage.mainModule, snippetsPath
 
+      controller = this #sending the context of plantuml-toolkit to the view
       @openerDisposable = atom.workspace.addOpener (uriToOpen) ->
         {protocol, host, pathname} = url.parse uriToOpen
         return unless protocol is 'plantuml-toolkit:'
 
         PlantumlPreviewView ?= require './plantuml-toolkit-view'
-        new PlantumlPreviewView(editorId: pathname.substring(1))
+        new PlantumlPreviewView(editorId: pathname.substring(1), toolkitController: controller)
+
+  # called when a view is destroyed
+  removeFromPreviewsList: (previewView) ->
+    # managing the list outside of module.export context
+    # the list will be available at the view via window.previews
+    removeFromLocalList previewView
+
+  # called when a view is created
+  addToPreviewsList: (previewView) ->
+    # managing the list outside of module.export context
+    # the list will be available at the view via window.previews
+    addToLocalList previewView
 
   deactivate: ->
       @openerDisposable.dispose()
+
+addToLocalList = (previewView) ->
+  @previews ?= []
+  @previews.push previewView
+
+removeFromLocalList = (previewView) ->
+  @previews ?= []
+  idx = @previews.indexOf(previewView)
+  if(idx > -1 && @previews)
+    @previews.splice(idx, 1)
+    true
+  false
 
 loadCustomSnippets = (snippetsModule, customSnippetsPath) ->
   snippetsModule.loadSnippetsDirectory customSnippetsPath, (error, loadedSnippets) ->
@@ -201,8 +225,8 @@ addPreviewForEditor = (editor) ->
     options =
       searchAllPanes: true
       split: 'right'
-    atom.workspace.open(uri, options).then (plantumlPreviewView) ->
-      if isPlantumlPreviewView(plantumlPreviewView)
+    atom.workspace.open(uri, options).then (previewView) ->
+      if isPlantumlPreviewView(previewView)
         previousActivePane.activate()
   else
     console.warn "Editor has not been saved to file."

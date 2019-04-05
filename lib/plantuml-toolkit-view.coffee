@@ -43,13 +43,15 @@ class PlantumlPreviewView extends ScrollView
             @option value: 'svg', 'svg'
       @div class: 'plantuml-container', outlet: 'container'
 
-  constructor: ({@editorId}) ->
+  constructor: ({@editorId, @toolkitController}) ->
     super
     @editor = editorForId @editorId
     @disposables = new CompositeDisposable
     @imageInfo = {scale: 1}
+    @toolkitController.addToPreviewsList(this)
 
   destroy: ->
+    @toolkitController.removeFromPreviewsList(this)
     @disposables.dispose()
 
   attached: ->
@@ -152,9 +154,19 @@ class PlantumlPreviewView extends ScrollView
         @container.append div
       imageInfo = @imageInfo
       zoomToFit = @zoomToFit.is(':checked')
+      isSVG = path.extname(file) == '.svg'
+
       img = $('<img/>')
         .attr('src', "#{file}?time=#{time}")
-        .attr('file', file)
+
+      if isSVG
+        img = $('<object/>')
+          .attr('data', "#{file}?time=#{time}")
+          .attr('type', "image/svg+xml")
+          .attr('editorId', @editorId) # this attribute will be read by function that sends the selected text to the controller
+          # see svgElementClicked(event)
+
+      img.attr('file', file)
         .load ->
           img = $(this)
           file = img.attr 'file'
@@ -165,15 +177,50 @@ class PlantumlPreviewView extends ScrollView
             info = {}
           info.origWidth = img.width()
           info.origHeight = img.height()
+          if isSVG
+            svgAttr = img.context.contentDocument.childNodes[0].attributes
+            info.origWidth = svgAttr.getNamedItem('width').nodeValue.replace("px", "")
+            info.origHeight = svgAttr.getNamedItem('height').nodeValue.replace("px", "")
           imageInfo[name] = info
 
           img.attr('width', imageInfo.scale * info.origWidth)
           img.attr('height', imageInfo.scale * info.origHeight)
           img.attr('class', 'uml-image open-file copy-filename')
+
           if zoomToFit
             img.addClass('zoomToFit')
 
       @container.append img
+    @container.append '
+    <script type="text/javascript">
+      function svgElementClicked(event) {
+        if(event.srcElement.tagName === "text") {
+          var editorId = event.view.frameElement.attributes.getNamedItem("editorId").nodeValue;
+          var previewView = window.previews.filter(previewView => previewView.editorId === editorId);
+          if(!previewView) return;
+          previewView[0].selectTextInEditor(event.srcElement.innerHTML);
+        }
+      }
+
+      function insertScriptsInSVG(evt) {
+          var svgDoc = evt.currentTarget.contentDocument;
+          var svgObj = svgDoc.getElementsByTagName("svg")[0];
+
+          var styleElement = svgDoc.createElementNS("http://www.w3.org/2000/svg", "style");
+          styleElement.textContent = "text { cursor: pointer; } text:hover {stroke: black !important;}";
+          svgObj.appendChild(styleElement);
+
+          svgObj.addEventListener("click", svgElementClicked);
+      }
+
+      /* insert CSS and JS into generated SVG during runtime */
+      var objs = document.getElementsByTagName("object");
+      if(objs && objs.length > 0) {
+        for(obj of objs) {
+          obj.addEventListener("load", insertScriptsInSVG);
+        }
+      }
+    </script>'
     @container.show
 
   scaleImages: ->
@@ -190,6 +237,24 @@ class PlantumlPreviewView extends ScrollView
     @container.empty()
     @container.append $('<div/>').attr('class', 'throbber')
     @container.show
+
+  selectTextInEditor: (text) ->
+    edt = @editor
+    buffer = edt.buffer
+    # decode html entities and escape regex chars (findAll consider the input text as a regexp)
+    searchText = new DOMParser()
+                  .parseFromString(text, "text/html").documentElement.textContent
+                  .replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
+    buffer.findAll(searchText).then (ranges) ->
+      if ranges.length > 0
+        edt.clearSelections() # remove previous selections
+        edt.setCursorBufferPosition(ranges[0].end) # move the existing cursor to the end of the first match
+        for range in ranges
+          edt.addSelectionForBufferRange(range) # add a selection for each matching text found in buffer
+
+        pane = atom.workspace.paneForItem(edt)
+        pane.activate() # focus the pane that contains the editor
+        pane.activateItem(edt) # show the editor in pane (if there are multiple editors, the corresponding editor will be shown)
 
   setZoomFit: (checked) ->
     if checked
