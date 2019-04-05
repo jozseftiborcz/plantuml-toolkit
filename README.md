@@ -1,69 +1,76 @@
 # PlantUML Toolkit
+> Everything you need to design UML diagrams using Atom editor
 
-A fork of [plantuml-preview](https://github.com/peele/plantuml-preview/) with syntax highlighting rules from [language-plantuml](https://github.com/plafue/language-plantuml/), automatic configuration of plantuml's jar from [node-plantuml](https://www.npmjs.com/package/node-plantuml) and new features.
+[![NPM Version][npm-image]][npm-url]
+[![Build Status][travis-image]][travis-url]
+[![Downloads Stats][npm-downloads]][npm-url]
 
-## Features
+PlantUML Toolkit (plantuml-toolkit) is an Atom's package with all the tools you need to easily design, code, preview and generate UML diagrams using [PlantUML](http://plantuml.com/).
 
-![plantuml-preview screenshot](plantuml-preview.png)
+It's a fork of [plantuml-preview](https://github.com/peele/plantuml-preview/) with syntax highlighting rules from [language-plantuml](https://github.com/plafue/language-plantuml/), automatic configuration of plantuml's jar from [node-plantuml](https://www.npmjs.com/package/node-plantuml) and a lot of new features.
 
-![plantuml-preview screenshot](bulk-generation.gif)
+## Installation
 
-#### > plantuml-toolkit
-- Bulk generation of diagram's images
-  - Can generate the images (PNG, SVG and TXT) for ALL diagrams of a folder
-- Extensible Snippets
-  - Set in Configuration the path of the code Snippets you want to use with PlantUML
+Using Atom:
 
-#### > from plantuml-preview
-- Generate diagrams and display in split pane
-  - Output formats: svg, png
-  - Context menu command to copy diagram
-    - SVG as XML
-    - PNG as PNG
-  - Images are only generated on preview toggle if the expected image files do not exist or are out of date
-  - Regenerate on save
-- Supports multipage diagrams
-  - `newpage` within `@startuml`/`@enduml`  
-  - Multiple `@startuml`/`@enduml` within file
-  - Combinations of both
-- Handling of `@startuml filename`. Images may not display if the extension on the filename does not match the output format.
-- Charset of the text editor will be passed to PlantUML
-- Zoom to fit option
-  - Configuration setting for initial value
-  - Checkbox control for each preview
-- Scaled zooming
-  - Maintained when regenerating on save
-  - Maintained when output format is changed
-- Use temporary directory option
-  - Configuration setting for initial value
-  - Checkbox control for each preview
+```
+1. In Atom's settings select `Install`
+2. Search for `plantuml-toolkit`
+3. Click on 'Install'
+```
 
-#### > from language-plantuml
-- Basic support for syntax highlighting of PlantUML files in atom.
+Using command line:
 
-#### > from node-plantuml
-- Automatic download and configuration of plantuml's jar
-  - Make sure you have access to the following URL: https://sourceforge.net/projects/plantuml/files/
+```sh
+apm install plantuml-toolkit
+```
+> If the `apm` was not found by your command prompt/terminal, please visit [Atom's installation guide][atom-install-guide] and follow the instructions to install it.
 
----
 
-## Configuration
+## Usage example
 
-### Language
-- `Snippets Path`: The path to the folder with your custom snippets for PlantUML diagrams. Useful when they're available in a Git repository.
+![](plantuml-toolkit-features.gif)
 
-### Preview
-- `Beautify XML`: Use js-beautify on XML when copying and generating SVG diagrams, probably pointless, default = true
-- `Bring To Front`: Bring preview to front when parent editor gains focus
-  - Default = false
-  - Works best if `fuzzy-finder:Search All Panes` = true
-  - *See [CHANGELOG](https://github.com/peele/plantuml-preview/blob/master/CHANGELOG.md), don't know if this feature is necessary*
-- `Display Filename Above UML Diagrams`: Default = true
-- `Graphvis Dot Executable`: Path of dot executable, [Graphviz](http://www.graphviz.org/)
-- `Additional PlantUML Arguments`: Free form text field for additional arguments to PlantUML. Added immediately after the `-jar` argument.
-- `PlantUML Jar`: Path of PlantUML jar. Only necessary if the automatic configuration of the plantuml.jar fails.
-- `Java Executable`: Path of Java executable, default = java
-- `Additional Java Arguments`: Free form text field for additional arguments for java call.
-- `Output Format`: Select png or svg output, default = svg
-- `Use Temp Directory`: Output diagrams to OS temporary directory, default = true
-- `Zoom To Fit`: The initial setting for new preview panes, default = true
+_For more examples and usage, please refer to the [Wiki][wiki]._
+
+## Development setup
+
+```
+1. Checkout plantuml-toolkit's repository under %ATOM_HOME%/packages
+2. Using your command line tool navigate to %ATOM_HOME%/packages
+3. Execute the following command:
+    npm install
+```
+
+## Release History
+
+* 0.0.1
+    * Fisrt release
+
+## Meta
+
+Capco Digital – [@CapcoDigital](https://twitter.com/capcodigital) – oss@capco.com
+
+Distributed under the MIT license. See ``LICENSE`` for more information.
+
+[https://github.com/capcodigital/](https://github.com/capcodigital/)
+
+## Contributing
+
+First read the contribution guidelines at [[CONTRIBUTING]]
+
+Then:
+1. Fork it (<https://github.com/capcodigital/plantuml-toolkit/fork>)
+2. Create your feature branch (`git checkout -b feature/fooBar`)
+3. Commit your changes (`git commit -am 'Add some fooBar'`)
+4. Push to the branch (`git push origin feature/fooBar`)
+5. Create a new Pull Request
+
+<!-- Markdown link & img dfn's -->
+[npm-image]: https://img.shields.io/npm/v/datadog-metrics.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/datadog-metrics
+[npm-downloads]: https://img.shields.io/npm/dm/datadog-metrics.svg?style=flat-square
+[travis-image]: https://img.shields.io/travis/dbader/node-datadog-metrics/master.svg?style=flat-square
+[travis-url]: https://travis-ci.org/dbader/node-datadog-metrics
+[wiki]: https://github.com/yourname/yourproject/wiki
+[atom-install-guide]: https://flight-manual.atom.io/getting-started/sections/installing-atom/

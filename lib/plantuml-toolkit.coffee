@@ -320,8 +320,6 @@ generate = (imageType) ->
       console.log "plantuml-toolkit: stdout\n#{str}"
 
     exit = (code) ->
-      #exitHandler imgFiles
-      console.log code
       if code == 100
         if isDir
           atom.notifications.addWarning "plantuml-toolkit: No diagrams", detail: "No diagrams found in folder #{dirRequest}", dismissable: true
