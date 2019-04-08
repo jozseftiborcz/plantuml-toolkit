@@ -175,16 +175,21 @@ class PlantumlPreviewView extends ScrollView
             info = imageInfo[name]
           else
             info = {}
-          info.origWidth = img.width()
-          info.origHeight = img.height()
           if isSVG
-            svgAttr = img.context.contentDocument.childNodes[0].attributes
-            info.origWidth = svgAttr.getNamedItem('width').nodeValue.replace("px", "")
-            info.origHeight = svgAttr.getNamedItem('height').nodeValue.replace("px", "")
-          imageInfo[name] = info
+            svgAttr = img.context.contentDocument.childNodes[0]
+            if svgAttr is not undefined
+              svgAttr = svgAttr.attributes
+              info.origWidth = svgAttr.getNamedItem('width').nodeValue.replace("px", "")
+              info.origHeight = svgAttr.getNamedItem('height').nodeValue.replace("px", "")
+              img.attr('width', imageInfo.scale * info.origWidth)
+              img.attr('height', imageInfo.scale * info.origHeight)
+          else
+            info.origWidth = img.width()
+            info.origHeight = img.height()
+            img.attr('width', imageInfo.scale * info.origWidth)
+            img.attr('height', imageInfo.scale * info.origHeight)
 
-          img.attr('width', imageInfo.scale * info.origWidth)
-          img.attr('height', imageInfo.scale * info.origHeight)
+          imageInfo[name] = info
           img.attr('class', 'uml-image open-file copy-filename')
 
           if zoomToFit
@@ -241,10 +246,22 @@ class PlantumlPreviewView extends ScrollView
   selectTextInEditor: (text) ->
     edt = @editor
     buffer = edt.buffer
-    # decode html entities and escape regex chars (findAll consider the input text as a regexp)
+
+    # Sanitize input
+
+    # sometimes the generated diagram has more characters than what was writen in the puml
+    # e.g. 'alt' statement. It renders the condition of the alt surrounded by brackets. We must remove them
+    # before we serch for the clicked text in the source file
+    if text.charAt(0) == '['
+      text = text.slice(1)
+    if text.slice(-1) == ']'
+      text = text.slice(0, -1)
+
     searchText = new DOMParser()
-                  .parseFromString(text, "text/html").documentElement.textContent
-                  .replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
+                  .parseFromString(text, "text/html").documentElement.textContent # decode html entities
+                  .replace(/[-[\]{}()*+?.,\\^$|#]/g, '\\$&') # escape regex chars (findAll consider the input text as a regexp). \s are not escaped. see `replace` bellow
+                  .replace(/\s+/g, '\\s\+') # spaces will be searched as possible sequences of spaces. in some scenarios plantuml replaces multiple spaces by a single space char
+
     buffer.findAll(searchText).then (ranges) ->
       if ranges.length > 0
         edt.clearSelections() # remove previous selections
