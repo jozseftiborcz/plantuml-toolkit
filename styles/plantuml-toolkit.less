@@ -17,6 +17,8 @@ atom-pane-container atom-pane .item-views {
   color: @text-color;
   text-align: center;
   padding: @component-padding;
+  position: absolute;
+
   div {
     display: inline;
     padding-left: @component-padding;
@@ -116,6 +118,8 @@ atom-pane-container atom-pane .item-views {
 }
 
 .plantuml-container {
+  padding-top: 40px;
+
   .filename {
     font-size: @input-font-size;
     font-family: @font-family;
@@ -139,8 +143,5 @@ atom-pane-container atom-pane .item-views {
     background-position: top center;
     padding-top: 70px;
     text-align: center;
-  }
-  text {
-      cursor: pointer;
   }
 }

@@ -32,12 +32,6 @@ module.exports =
       description: 'Options for PlantUML Preview'
       collapsed: true
       properties:
-        outputFormat:
-          title: 'Output Format'
-          type: 'string'
-          default: 'svg'
-          enum: ['png', 'svg']
-          order: 0
         java:
           title: 'Java Executable'
           description: 'Path to and including Java executable. If default, Java found on System Path will be used.'
@@ -69,6 +63,7 @@ module.exports =
           default: ''
           order: 5
         zoomToFit:
+          title: 'Zoom Diagrams to Fit the Page'
           type: 'boolean'
           default: true
           order: 6

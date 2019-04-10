@@ -32,15 +32,7 @@ class PlantumlPreviewView extends ScrollView
       @div class: 'plantuml-control', outlet: 'control', =>
         @div =>
           @input id: 'zoomToFit', type: 'checkbox', outlet: 'zoomToFit'
-          @label 'Zoom To Fit'
-        @div =>
-          @input id: 'useTempDir', type: 'checkbox', outlet: 'useTempDir'
-          @label 'Use Temp Dir'
-        @div =>
-          @label 'Output'
-          @select outlet: 'outputFormat', =>
-            @option value: 'png', 'png'
-            @option value: 'svg', 'svg'
+          @label 'Zoom To Fit', for: 'zoomToFit'
       @div class: 'plantuml-container', outlet: 'container'
 
   constructor: ({@editorId, @toolkitController}) ->
@@ -56,9 +48,6 @@ class PlantumlPreviewView extends ScrollView
 
   attached: ->
     if @editor?
-      @useTempDir.attr('checked', atom.config.get('plantuml-toolkit.previewSettings.useTempDir'))
-      @outputFormat.val atom.config.get('plantuml-toolkit.previewSettings.outputFormat')
-
       @zoomToFit.attr('checked', atom.config.get('plantuml-toolkit.previewSettings.zoomToFit'))
       checkHandler = (checked) =>
         @setZoomFit(checked)
@@ -66,10 +55,11 @@ class PlantumlPreviewView extends ScrollView
         checkHandler(@checked)
 
       saveHandler = =>
-        @renderUml()
+        previousScrollTop = this.scrollTop()
+        previousScrollLeft = this.scrollLeft()
+        @renderUml({scrollTo: [previousScrollTop, previousScrollLeft]})
+
       @disposables.add @editor.getBuffer().onDidSave ->
-        saveHandler()
-      @outputFormat.change ->
         saveHandler()
 
       if atom.config.get 'plantuml-toolkit.previewSettings.bringFront'
@@ -124,6 +114,34 @@ class PlantumlPreviewView extends ScrollView
 
       @renderUml()
 
+      @disposables.add atom.views.getView(@editor).onDidChangeScrollTop (editorScrollTop) =>
+        view = this
+        editorVerticalScrollSize = @editor.component.getScrollBottom() - @editor.component.getScrollTop() + 100
+        viewVerticalScrollSize = view.scrollBottom() - view.scrollTop()
+
+        scrollTopEquivalence = @editor.component.getScrollTop() / (@editor.component.getScrollHeight() - editorVerticalScrollSize)
+        newViewTop = scrollTopEquivalence * (view.container.context.scrollHeight - viewVerticalScrollSize)
+
+        view.scrollTop(newViewTop)
+
+
+        # console.log view
+        # console.log "View stats: "
+        # console.log "scrollHeight: ", view.container.context.scrollHeight
+        # console.log "scrollTop:", view.scrollTop()
+        # console.log "scrollBottom:", view.scrollBottom()
+        # console.log "scrollWidth:", view.container.context.scrollWidth
+        # console.log "scrollLeft:", view.scrollLeft()
+        # console.log "scrollRight:", view.scrollRight()
+        #
+        # console.log "Editor stats: "
+        # console.log "getScrollHeight:", @editor.component.getScrollHeight()
+        # console.log "getScrollTop:", @editor.component.getScrollTop()
+        # console.log "getScrollBottom:", @editor.component.getScrollBottom()
+        # console.log "getScrollWidth:", @editor.component.getScrollWidth()
+        # console.log "getScrollLeft:", @editor.component.getScrollLeft()
+        # console.log "getScrollRight:", @editor.component.getScrollRight()
+
   getPath: ->
     if @editor?
       @editor.getPath()
@@ -142,7 +160,7 @@ class PlantumlPreviewView extends ScrollView
   onDidChangeModified: ->
     new Disposable()
 
-  addImages: (imgFiles, time) ->
+  addImages: (imgFiles, time, options) ->
     @container.empty()
     displayFilenames = atom.config.get('plantuml-toolkit.previewSettings.displayFilename')
     for file in imgFiles
@@ -154,19 +172,13 @@ class PlantumlPreviewView extends ScrollView
         @container.append div
       imageInfo = @imageInfo
       zoomToFit = @zoomToFit.is(':checked')
-      isSVG = path.extname(file) == '.svg'
-
-      img = $('<img/>')
-        .attr('src', "#{file}?time=#{time}")
-
-      if isSVG
-        img = $('<object/>')
-          .attr('data', "#{file}?time=#{time}")
-          .attr('type', "image/svg+xml")
-          .attr('editorId', @editorId) # this attribute will be read by function that sends the selected text to the controller
-          # see svgElementClicked(event)
-
-      img.attr('file', file)
+      view = this
+      img = $('<object/>')
+        .attr('data', "#{file}?time=#{time}")
+        .attr('type', "image/svg+xml")
+        .attr('editorId', @editorId) # this attribute will be read by function that sends the selected text to the controller
+        # see svgElementClicked(event)
+        .attr('file', file)
         .load ->
           img = $(this)
           file = img.attr 'file'
@@ -175,17 +187,12 @@ class PlantumlPreviewView extends ScrollView
             info = imageInfo[name]
           else
             info = {}
-          if isSVG
-            svgAttr = img.context.contentDocument.childNodes[0]
-            if svgAttr is not undefined
-              svgAttr = svgAttr.attributes
-              info.origWidth = svgAttr.getNamedItem('width').nodeValue.replace("px", "")
-              info.origHeight = svgAttr.getNamedItem('height').nodeValue.replace("px", "")
-              img.attr('width', imageInfo.scale * info.origWidth)
-              img.attr('height', imageInfo.scale * info.origHeight)
-          else
-            info.origWidth = img.width()
-            info.origHeight = img.height()
+
+          svgAttr = img.context.contentDocument.childNodes[0]
+          if svgAttr is not undefined
+            svgAttr = svgAttr.attributes
+            info.origWidth = svgAttr.getNamedItem('width').nodeValue.replace("px", "")
+            info.origHeight = svgAttr.getNamedItem('height').nodeValue.replace("px", "")
             img.attr('width', imageInfo.scale * info.origWidth)
             img.attr('height', imageInfo.scale * info.origHeight)
 
@@ -195,16 +202,19 @@ class PlantumlPreviewView extends ScrollView
           if zoomToFit
             img.addClass('zoomToFit')
 
+          view.scrollTop(options.scrollTo[0])
+          view.scrollLeft(options.scrollTo[1])
+
       @container.append img
     @container.append '
     <script type="text/javascript">
       function svgElementClicked(event) {
-        if(event.srcElement.tagName === "text") {
-          var editorId = event.view.frameElement.attributes.getNamedItem("editorId").nodeValue;
-          var previewView = window.previews.filter(previewView => previewView.editorId === editorId);
-          if(!previewView) return;
-          previewView[0].selectTextInEditor(event.srcElement.innerHTML);
-        }
+        if(event.srcElement.tagName != "text")
+          return;
+        var editorId = event.view.frameElement.attributes.getNamedItem("editorId").nodeValue;
+        var previewView = window.previews.filter(previewView => previewView.editorId === editorId);
+        if(!previewView) return;
+        previewView[0].selectTextInEditor(event.srcElement.innerHTML);
       }
 
       function insertScriptsInSVG(evt) {
@@ -326,18 +336,18 @@ class PlantumlPreviewView extends ScrollView
 
     filenames
 
-  renderUml: ->
+  renderUml: (options = {scrollTo: [0, 0]}) ->
     path ?= require 'path'
     fs ?= require 'fs-plus'
     os ?= require 'os'
 
     filePath = @editor.getPath()
     basename = path.basename(filePath, path.extname(filePath))
-    directory = path.dirname(filePath)
-    format = @outputFormat.val()
+    format = 'svg' #the preview will always be SVG
     settingError = false
+    directory = path.dirname(filePath)
 
-    if @useTempDir.is(':checked')
+    if atom.config.get('plantuml-toolkit.previewSettings.useTempDir')
       directory = path.join os.tmpdir(), 'plantuml-toolkit'
       if !fs.existsSync directory
         fs.mkdirSync directory
@@ -356,7 +366,7 @@ class PlantumlPreviewView extends ScrollView
         break
     if upToDate
       @removeImages()
-      @addImages imgFiles, Date.now()
+      @addImages imgFiles, Date.now(), options
       return
 
     command = atom.config.get 'plantuml-toolkit.previewSettings.java'
@@ -415,7 +425,7 @@ class PlantumlPreviewView extends ScrollView
             fs.writeFileSync(file, buffer, {encoding: @editor.getEncoding()})
         else
           console.log("File not found: #{file}")
-      @addImages(files, Date.now())
+      @addImages(files, Date.now(), options)
       if errorlog.length > 0
         str = errorlog.join('')
         if str.match ///jarfile///i
