@@ -33,18 +33,22 @@ class PlantumlPreviewView extends ScrollView
         @div =>
           @input id: 'zoomToFit', type: 'checkbox', outlet: 'zoomToFit'
           @label 'Zoom To Fit', for: 'zoomToFit'
+          @input id: 'syncScroll', type: 'checkbox', outlet: 'syncScroll', style: 'margin-left: 20px;'
+          @label 'Sync Scroll', for: 'syncScroll'
       @div class: 'plantuml-container', outlet: 'container'
 
   constructor: ({@editorId, @toolkitController}) ->
     super
     @editor = editorForId @editorId
     @disposables = new CompositeDisposable
+    @syncScrollDisposable = new CompositeDisposable
     @imageInfo = {scale: 1}
     @toolkitController.addToPreviewsList(this)
 
   destroy: ->
     @toolkitController.removeFromPreviewsList(this)
     @disposables.dispose()
+    @syncScrollDisposable.dispose()
 
   attached: ->
     if @editor?
@@ -53,6 +57,14 @@ class PlantumlPreviewView extends ScrollView
         @setZoomFit(checked)
       @on 'change', '#zoomToFit', ->
         checkHandler(@checked)
+
+      syncScrollConfig = atom.config.get('plantuml-toolkit.previewSettings.syncScroll')
+      @syncScroll.attr('checked', syncScrollConfig)
+      @setSyncScroll(syncScrollConfig)
+      syncScrollHandler = (checked) =>
+        @setSyncScroll(checked)
+      @on 'change', '#syncScroll', ->
+        syncScrollHandler(@checked)
 
       saveHandler = =>
         previousScrollTop = this.scrollTop()
@@ -114,15 +126,7 @@ class PlantumlPreviewView extends ScrollView
 
       @renderUml()
 
-      @disposables.add atom.views.getView(@editor).onDidChangeScrollTop (editorScrollTop) =>
-        view = this
-        editorVerticalScrollSize = @editor.component.getScrollBottom() - @editor.component.getScrollTop() + 100
-        viewVerticalScrollSize = view.scrollBottom() - view.scrollTop()
 
-        scrollTopEquivalence = @editor.component.getScrollTop() / (@editor.component.getScrollHeight() - editorVerticalScrollSize)
-        newViewTop = scrollTopEquivalence * (view.container.context.scrollHeight - viewVerticalScrollSize)
-
-        view.scrollTop(newViewTop)
 
 
         # console.log view
@@ -288,6 +292,21 @@ class PlantumlPreviewView extends ScrollView
       @container.find('.uml-image').addClass('zoomToFit')
     else
       @container.find('.uml-image').removeClass('zoomToFit')
+
+  setSyncScroll: (checked) ->
+    if checked
+      @syncScrollDisposable = new CompositeDisposable
+      @syncScrollDisposable.add atom.views.getView(@editor).onDidChangeScrollTop (editorScrollTop) =>
+        view = this
+        editorVerticalScrollSize = @editor.component.getScrollBottom() - @editor.component.getScrollTop() + 100
+        viewVerticalScrollSize = view.scrollBottom() - view.scrollTop()
+
+        scrollTopEquivalence = @editor.component.getScrollTop() / (@editor.component.getScrollHeight() - editorVerticalScrollSize)
+        newViewTop = scrollTopEquivalence * (view.container.context.scrollHeight - viewVerticalScrollSize)
+
+        view.scrollTop(newViewTop)
+    else
+      @syncScrollDisposable.dispose()
 
   getFilenames: (directory, defaultName, defaultExtension, contents) ->
     path ?= require 'path'

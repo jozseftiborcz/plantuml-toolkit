@@ -67,29 +67,34 @@ module.exports =
           type: 'boolean'
           default: true
           order: 6
+        syncScroll:
+          title: 'Synchronize Scrolling (Editor -> Preview)'
+          type: 'boolean'
+          default: true
+          order: 7
         displayFilename:
           title: 'Display Filename Above UML Diagrams'
           type: 'boolean'
           default: true
-          order: 7
+          order: 8
         bringFront:
           title: 'Bring To Front'
           description: 'Bring preview to front when parent editor gains focus.'
           type: 'boolean'
           default: false
-          order: 8
+          order: 9
         useTempDir:
           title: 'Use Temp Directory'
           description: 'Output diagrams to {OS Temp Dir}/plantuml-toolkit/'
           type: 'boolean'
           default: true
-          order: 9
+          order: 10
         beautifyXml:
           title: 'Beautify XML'
           description: 'Use js-beautify on XML when copying and generating SVG diagrams.'
           type: 'boolean'
           default: true
-          order: 10
+          order: 11
 
   initialize: (serializeState) ->
       console.log "Initializing plantuml-toolkit"
