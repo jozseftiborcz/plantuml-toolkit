@@ -2,7 +2,7 @@
 
 Thanks for taking the time to contribute!
 
-The following is a set of guidelines for contributing to plantuml-toolkit, which is hosted in the [Capco Digital Organization](https://github.com/capcodigital) on GitHub. These are mostly guidelines, not rules. Use your best judgment, and feel free to propose changes to this document in a pull request.
+The following is a set of guidelines for contributing to plantuml-toolkit, which is hosted [on GitHub](https://github.com/MatheusAze). These are mostly guidelines, not rules. Use your best judgment, and feel free to propose changes to this document in a pull request.
 
 #### Table Of Contents
 
@@ -16,7 +16,7 @@ The following is a set of guidelines for contributing to plantuml-toolkit, which
 
 ## Code of Conduct
 
-This project and everyone participating in it is governed by the [Capco Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to [oss@capco.com](mailto:oss@capco.com).
+This project and everyone participating in it is governed by the [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to [matheus.aze@hotmail.com](mailto:matheus.aze@hotmail.com).
 
 ## How Can I Contribute?
 
@@ -30,8 +30,8 @@ Before creating bug reports, please check [this list](#before-submitting-a-bug-r
 
 #### Before Submitting A Bug Report
 
-* **Check the [FAQs](https://github.com/capcodigital/plantuml-toolkit/FAQ.md)** for a list of common questions and problems.
-* **Perform a [cursory search](https://github.com/issues?utf8=%E2%9C%93&q=is%3Aissue+user%3Acapcodigital+repo%3Aplantuml-toolkit)** to see if the problem has already been reported. If it has **and the issue is still open**, add a comment to the existing issue instead of opening a new one.
+* **Check the [FAQs](https://github.com/MatheusAze/plantuml-toolkit/blob/master/FAQ.md)** for a list of common questions and problems.
+* **Perform a [cursory search](https://github.com/issues?utf8=%E2%9C%93&q=is%3Aissue+user%3AMatheusAze+repo%3Aplantuml-toolkit)** to see if the problem has already been reported. If it has **and the issue is still open**, add a comment to the existing issue instead of opening a new one.
 
 #### How Do I Submit A (Good) Bug Report?
 
@@ -73,7 +73,7 @@ Before creating enhancement suggestions, please check [this list](#before-submit
 
 #### Before Submitting An Enhancement Suggestion
 
-* **Perform a [cursory search](https://github.com/issues?utf8=%E2%9C%93&q=is%3Aissue+user%3Acapcodigital+repo%3Aplantuml-toolkit)** to see if the enhancement has already been suggested. If it has, add a comment to the existing issue instead of opening a new one.
+* **Perform a [cursory search](https://github.com/issues?utf8=%E2%9C%93&q=is%3Aissue+user%3AMatheusAze+repo%3Aplantuml-toolkit)** to see if the enhancement has already been suggested. If it has, add a comment to the existing issue instead of opening a new one.
 
 #### How Do I Submit A (Good) Enhancement Suggestion?
 

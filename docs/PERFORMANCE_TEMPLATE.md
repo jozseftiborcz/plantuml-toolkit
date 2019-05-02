@@ -2,7 +2,7 @@
 
 * Fill out the template below. Any pull request that does not include enough information to be reviewed in a timely manner may be closed at the maintainers' discretion.
 * The pull request must only affect performance of existing functionality. To contribute other changes, you must use a different template. You can see all templates at [PULL_REQUEST_TEMPLATE.md](PULL_REQUEST_TEMPLATE.md).
-* For more details about creating a Pull Request, please see [CONTRIBUTING.md#pull-requests](../CONTRIBUTING.md#pull-requests).
+* For more details about creating a Pull Request, please see [CONTRIBUTING.md#pull-requests](https://github.com/MatheusAze/plantuml-toolkit/blob/master/CONTRIBUTING.md#pull-requests).
 
 ### Description of the Change
 

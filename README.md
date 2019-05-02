@@ -44,23 +44,29 @@ _For more examples and usage, please refer to the [Wiki][wiki]._
 
 ## Release History
 
-* 0.0.1
+* 0.1.0
     * Fisrt release
+* 0.2.0
+    * Sync scrolling
+    * Bug fixes
+    * Improved text selection on click
 
 ## Meta
 
-Capco Digital – [@CapcoDigital](https://twitter.com/capcodigital) – oss@capco.com
+Maintainer: Matheus Azevedo - [@MatheusAzv](https://twitter.com/MatheusAzv)
+
+[Capco Digital](http://github.com/capcodigital) – [@CapcoDigital](https://twitter.com/capcodigital) – oss@capco.com
 
 Distributed under the MIT license. See ``LICENSE`` for more information.
 
-[https://github.com/capcodigital/](https://github.com/capcodigital/)
+[https://github.com/MatheusAze/](https://github.com/MatheusAze/)
 
 ## Contributing
 
 First read the contribution guidelines at [[CONTRIBUTING]]
 
 Then:
-1. Fork it (<https://github.com/capcodigital/plantuml-toolkit/fork>)
+1. Fork it (<https://github.com/MatheusAze/plantuml-toolkit/fork>)
 2. Create your feature branch (`git checkout -b feature/fooBar`)
 3. Commit your changes (`git commit -am 'Add some fooBar'`)
 4. Push to the branch (`git push origin feature/fooBar`)

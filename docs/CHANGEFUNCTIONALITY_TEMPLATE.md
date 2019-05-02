@@ -3,7 +3,7 @@
 * Fill out the template below. Any pull request that does not include enough information to be reviewed in a timely manner may be closed at the maintainers' discretion.
 * The pull request must contribute a change that has been endorsed by the maintainer team. See details in the template below.
 * The pull request must update the test suite to exercise the updated functionality. For guidance, please see https://flight-manual.atom.io/hacking-atom/sections/writing-specs/.
-* For more details about creating a Pull Request, please see [CONTRIBUTING.md#pull-requests](../CONTRIBUTING.md#pull-requests).
+* For more details about creating a Pull Request, please see [CONTRIBUTING.md#pull-requests](https://github.com/MatheusAze/plantuml-toolkit/blob/master/CONTRIBUTING.md#pull-requests).
 
 ### Issue or RFC Endorsed by Atom's Maintainers
 
@@ -11,7 +11,7 @@
 
 Link to the issue or RFC that your change relates to. If there is not yet an issue for your bug, please open a new issue and then link to that issue in your pull request.
 
-To contribute an enhancement please follow our guide for suggesting an enhancement: [CONTRIBUTING.md#suggesting-enhancements](../CONTRIBUTING.md#suggesting-enhancements)
+To contribute an enhancement please follow our guide for suggesting an enhancement: [CONTRIBUTING.md#suggesting-enhancements](https://github.com/MatheusAze/plantuml-toolkit/blob/master/CONTRIBUTING.md#suggesting-enhancements)
 
 To contribute other changes, you must use a different template. You can see all templates at [PULL_REQUEST_TEMPLATE.md](PULL_REQUEST_TEMPLATE.md).
 

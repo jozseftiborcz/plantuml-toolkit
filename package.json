@@ -11,9 +11,9 @@
     "uml",
     "preview"
   ],
-  "repository": "https://github.com/capcodigital/plantuml-toolkit",
+  "repository": "https://github.com/MatheusAze/plantuml-toolkit",
   "bugs": {
-    "url": "https://github.com/issues?utf8=%E2%9C%93&q=is%3Aissue+user%3Acapcodigital"
+    "url": "https://github.com/issues?utf8=%E2%9C%93&q=is%3Aissue+user%3AMatheusAze"
   },
   "license": "MIT",
   "engines": {
