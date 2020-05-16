@@ -253,7 +253,7 @@
         },
         {
             "name":"string.quoted.double.plantuml",
-            "match":"^(\\s*|\\t*)(!include|!define|!definelong|!enddefinelong|hide)\\s+(.*)",
+            "match":"^(\\s*|\\t*)(!include|!includeurl|!define|!definelong|!enddefinelong|hide)\\s+(.*)",
             "captures": {
                 "2": { "name": "support.class.plantuml" },
                 "3": { "name": "keyword.control.plantuml" }
