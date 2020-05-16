@@ -11,9 +11,9 @@
     "uml",
     "preview"
   ],
-  "repository": "https://github.com/MatheusAze/plantuml-toolkit",
+  "repository": "https://github.com/jozseftiborcz/plantuml-toolkit",
   "bugs": {
-    "url": "https://github.com/issues?utf8=%E2%9C%93&q=is%3Aissue+user%3AMatheusAze"
+    "url": "https://github.com/jozseftiborcz/plantuml-toolkit/issues"
   },
   "license": "MIT",
   "engines": {
@@ -21,9 +21,9 @@
   },
   "dependencies": {
     "atom-space-pen-views": "^2.0.3",
-    "fs-plus": "^2.0.0",
+    "fs-plus": "3.1.1",
     "js-beautify": "^1.5.10",
-    "node-plantuml": "^0.8.1"
+    "node-plantuml": "^0.9.0"
   },
   "plantumlVersion": "1.2020.9",
   "files": [
