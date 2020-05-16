@@ -1,7 +1,7 @@
 {
   "name": "plantuml-toolkit",
   "main": "./lib/plantuml-toolkit",
-  "version": "0.2.1_tj",
+  "version": "0.2.1",
   "description": "A toolkit with multiple tools to handle PlantUML diagrams. Includes creating and displaying rendered uml diagrams and syntax highlighting.",
   "keywords": [
     "plantuml",
